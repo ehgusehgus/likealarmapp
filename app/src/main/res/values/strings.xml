@@ -1,3 +1,5 @@
 <resources>
     <string name="app_name">LikeAlarmapplication</string>
+    <string name="facebook_app_id">487817268330337</string>
+    <string name="fb_login_protocol_scheme">fb487817268330337</string>
 </resources>
