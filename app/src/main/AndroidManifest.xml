@@ -38,6 +38,16 @@
         <activity
             android:name=".SecondPageActivity.SecondPageActivity"
             android:theme="@style/Theme.AppCompat.NoActionBar" />
+
+        <service
+            android:name=".LocationService.Location"
+            android:enabled="true"
+            android:exported="true" />
+
+        <receiver
+            android:name=".LocationService.MyReceiver"
+            android:enabled="true"
+            android:exported="true"></receiver>
     </application>
 
 </manifest>
