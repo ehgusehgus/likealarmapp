@@ -104,6 +104,8 @@ public class MainActivity extends TabActivity {
 
         doOncreate();
 
+        Intent intent = new Intent(MainActivity.this,Location.class);
+        startService(intent);
 
 
         // GPS 위치정보 수신
