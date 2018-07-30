@@ -3,6 +3,7 @@
     package="com.example.q.likealarmapplication">
 
     <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
+    <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
     <uses-permission android:name="android.permission.INTERNET" />
 
     <application
@@ -34,10 +35,11 @@
         <activity
             android:name=".UserActivity.LoginActivity"
             android:theme="@style/Theme.AppCompat.NoActionBar" />
-        <activity android:name=".FirstPageActivity.FirstPageActivity"></activity>
+        <activity android:name=".FirstPageActivity.FirstPageActivity" />
         <activity
             android:name=".SecondPageActivity.SecondPageActivity"
             android:theme="@style/Theme.AppCompat.NoActionBar" />
+        <activity android:name=".UserActivity.UserCreateActivity" />
 
         <service
             android:name=".LocationService.Location"
@@ -47,7 +49,9 @@
         <receiver
             android:name=".LocationService.MyReceiver"
             android:enabled="true"
-            android:exported="true"></receiver>
+            android:exported="true" />
+
+        <activity android:name=".ThirdPageActivity.ThirdPageActivity"></activity>
     </application>
 
 </manifest>
