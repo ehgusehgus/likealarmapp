@@ -42,6 +42,8 @@
             android:theme="@style/Theme.AppCompat.NoActionBar" />
         <activity android:name=".UserActivity.UserCreateActivity"/>
 
+        <activity android:name=".ThirdPageActivity.ThirdPageActivity"/>
+
         <service
             android:name=".LocationService.LocationSer"
             android:enabled="true"
