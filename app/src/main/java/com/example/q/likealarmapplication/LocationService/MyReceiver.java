@@ -22,7 +22,7 @@ public class MyReceiver extends BroadcastReceiver {
 
             Log.i("000 RestartService" ,"ACTION.RESTART.PersistentService " );
 
-            Intent i = new Intent(context,Location.class);
+            Intent i = new Intent(context,LocationSer.class);
             context.startService(i);
         }
 
@@ -32,7 +32,7 @@ public class MyReceiver extends BroadcastReceiver {
         if(intent.getAction().equals(Intent.ACTION_BOOT_COMPLETED)){
 
             Log.i("RestartService" , "ACTION_BOOT_COMPLETED" );
-            Intent i = new Intent(context,Location.class);
+            Intent i = new Intent(context,LocationSer.class);
             context.startService(i);
         }
     }
