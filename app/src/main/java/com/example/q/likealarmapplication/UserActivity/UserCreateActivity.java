@@ -38,7 +38,7 @@ public class UserCreateActivity extends AppCompatActivity{
                 mEdit = findViewById(R.id.edittext);
                 final String text = mEdit.getText().toString();
                 if( text == "") {
-                    Toast.makeText(getApplication(), "닉네임을 입력해주세요", Toast.LENGTH_LONG).show();
+                    Toast.makeText(getApplication(), "이름을 입력해주세요", Toast.LENGTH_LONG).show();
                     return;
                 }
 
@@ -46,15 +46,13 @@ public class UserCreateActivity extends AppCompatActivity{
                         .baseUrl(HttpInterface.BaseURL)
                         .build();
                 HttpInterface httpInterface = retrofit.create(HttpInterface.class);
-                Call<JsonObject> postUserCall = httpInterface.createUser(AccessToken.getCurrentAccessToken().getUserId(), text);
+                Call<JsonObject> postUserCall = httpInterface.createUser(AccessToken.getCurrentAccessToken().getUserId(), text, "0", "0", "0");
                 postUserCall.enqueue(new Callback<JsonObject>(){
                     @Override
                     public void onResponse(Call<JsonObject> call, Response<JsonObject> response) {
                         JsonObject object = response.body();
                         if(object != null){
                             MyApplication.setNickname(text);
-                            Intent intent = new Intent(getApplication(), MainActivity.class);
-                            startActivity(intent);
                             finish();
                         } else {
                             Toast.makeText(getApplication(), "등록실패!!", Toast.LENGTH_LONG).show();

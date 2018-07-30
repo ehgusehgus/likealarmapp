@@ -14,10 +14,31 @@ public interface HttpInterface {
 
     @FormUrlEncoded
     @POST("/users/create")
-    Call<JsonObject> createUser(@Field("facebook_id") String facebook_id, @Field("nickname") String nickname);
-
+    Call<JsonObject> createUser(@Field("facebook_id") String facebook_id, @Field("nickname") String nickname, @Field("is_love") String islove, @Field("is_boring") String isboring, @Field("is_need") String isneeds);
 
     @GET("/users")
     Call<JsonObject> getUser(@Header("facebook_id") String facebook_id);
+
+    @FormUrlEncoded
+    @POST("/users/is_love")
+    Call<JsonObject> isLove(@Field("facebook_id") String facebook_id, @Field("is_love") String islove);
+
+    @FormUrlEncoded
+    @POST("/users/is_boring")
+    Call<JsonObject> isBoring(@Field("facebook_id") String facebook_id, @Field("is_boring") String isboring);
+
+    @FormUrlEncoded
+    @POST("/users/is_need")
+    Call<JsonObject> isNeeds(@Field("facebook_id") String facebook_id, @Field("is_need") String isneeds);
+
+    @GET("/users/is_love")
+    Call<JsonObject> getisLove(@Header("facebook_id") String facebook_id);
+
+    @GET("/users/is_boring")
+    Call<JsonObject> getisBoring(@Header("facebook_id") String facebook_id);
+
+    @GET("/users/is_needs")
+    Call<JsonObject> getisNeeds(@Header("facebook_id") String facebook_id);
+
 
 }

@@ -26,33 +26,33 @@ public class LoginActivity extends AppCompatActivity{
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
 
-    //facebook login
-    LoginButton loginButton = findViewById(R.id.login_button);
-    loginButton.setReadPermissions("email");
-    callbackManager = CallbackManager.Factory.create();
-        LoginManager.getInstance().registerCallback(callbackManager,
-                new FacebookCallback<LoginResult>() {
-        @Override
-        public void onSuccess(LoginResult loginResult) {
-            Intent intent = new Intent(getApplication(),MainActivity.class);
-            startActivity(intent);
-            finish();
-        }
+        //facebook login
+        LoginButton loginButton = findViewById(R.id.login_button);
+        loginButton.setReadPermissions("email");
+        callbackManager = CallbackManager.Factory.create();
+            LoginManager.getInstance().registerCallback(callbackManager,
+                    new FacebookCallback<LoginResult>() {
+            @Override
+            public void onSuccess(LoginResult loginResult) {
+                Intent intent = new Intent(getApplication(),MainActivity.class);
+                startActivity(intent);
+                finish();
+            }
 
-        @Override
-        public void onCancel() {
-            Toast.makeText(getApplicationContext(), "LoginCancel", Toast.LENGTH_LONG).show();
-            // App code
-        }
+            @Override
+            public void onCancel() {
+                Toast.makeText(getApplicationContext(), "LoginCancel", Toast.LENGTH_LONG).show();
+                // App code
+            }
 
-        @Override
-        public void onError(FacebookException exception) {
-            Toast.makeText(getApplicationContext(), "LoginError", Toast.LENGTH_LONG).show();
-            Log.d("LOGIN", exception.toString());
-            // App code
-        }
-    });
-}
+            @Override
+            public void onError(FacebookException exception) {
+                Toast.makeText(getApplicationContext(), "LoginError", Toast.LENGTH_LONG).show();
+                Log.d("LOGIN", exception.toString());
+                // App code
+            }
+        });
+    }
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {

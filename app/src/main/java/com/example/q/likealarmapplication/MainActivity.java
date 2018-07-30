@@ -1,57 +1,64 @@
 package com.example.q.likealarmapplication;
 
 import android.Manifest;
+import android.app.Activity;
 import android.app.TabActivity;
 import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
-import android.location.Location;
-import android.location.LocationListener;
-import android.location.LocationManager;
-import android.support.v4.app.ActivityCompat;
-import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
-import android.telecom.Call;
+import android.support.v4.app.ActivityCompat;
 import android.util.Log;
-import android.view.View;
 import android.widget.TabHost;
-import android.widget.TextView;
 import android.widget.Toast;
-import android.widget.ToggleButton;
 
 import com.example.q.likealarmapplication.FirstPageActivity.FirstPageActivity;
 import com.example.q.likealarmapplication.SecondPageActivity.SecondPageActivity;
 import com.example.q.likealarmapplication.UserActivity.LoginActivity;
 import com.example.q.likealarmapplication.UserActivity.UserCreateActivity;
 import com.facebook.AccessToken;
-import com.facebook.CallbackManager;
-import com.facebook.CustomTabActivity;
-import com.facebook.FacebookCallback;
-import com.facebook.FacebookException;
-import com.facebook.login.LoginManager;
-import com.facebook.login.LoginResult;
-import com.facebook.login.widget.LoginButton;
 import com.google.gson.JsonObject;
 
-
+import io.socket.emitter.Emitter;
 import retrofit2.Callback;
 import retrofit2.Response;
 import retrofit2.Retrofit;
 import retrofit2.converter.gson.GsonConverterFactory;
+import io.socket.client.IO;
+import io.socket.client.Socket;
 
 public class MainActivity extends TabActivity {
 
     String[] PERMISSIONS = {
-            Manifest.permission.ACCESS_FINE_LOCATION};
+            Manifest.permission.ACCESS_FINE_LOCATION,
+            Manifest.permission.INTERNET,
+            Manifest.permission.VIBRATE};
     AccessToken accessToken;
     Retrofit retrofit;
     HttpInterface httpInterface;
+    Context mContext;
+    private Socket mSocket;
 
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
+//        MyApplication app = (MyApplication) getApplication();
+//        mSocket = app.getSocket();
+//        mSocket.on(Socket.EVENT_CONNECT, onConnect);
+//        mSocket.on(Socket.EVENT_DISCONNECT, onDisconnect);
+//        mSocket.on(Socket.EVENT_CONNECT_ERROR, onConnectError);
+//        mSocket.on(Socket.EVENT_CONNECT_TIMEOUT, onConnectError);
+//        mSocket.on("new location", onNewLocation);
+//
+//        mSocket.connect();
+//
+//
+//        mSocket.emit("new location", "dddd");
+
+        mContext = this;
 
         retrofit = new Retrofit.Builder().addConverterFactory(GsonConverterFactory.create())
                 .baseUrl(HttpInterface.BaseURL)
@@ -68,44 +75,64 @@ public class MainActivity extends TabActivity {
         }
 
         //nickname
-        if(MyApplication.nickname.equals("")) {
+        if (MyApplication.nickname.equals("")) {
             retrofit2.Call<JsonObject> getUserCall = httpInterface.getUser(accessToken.getUserId());
             getUserCall.enqueue(new Callback<JsonObject>() {
                 @Override
                 public void onResponse(retrofit2.Call<JsonObject> call, Response<JsonObject> response) {
                     JsonObject object = response.body().get("result").getAsJsonObject();
                     if (object != null) {
-                        if(object.get("nickname") == null){
-                            Intent intent = new Intent(getApplication(),UserCreateActivity.class);
+                        if (object.get("name") == null) {
+                            Intent intent = new Intent(getApplication(), UserCreateActivity.class);
                             startActivity(intent);
                         } else {
-                            String res = object.get("nickname").toString();
+
+                            String res = object.get("name").toString();
                             Toast.makeText(getApplication(), res, Toast.LENGTH_LONG).show();
-                            MyApplication.setNickname(object.get("nickname").toString());
+                            MyApplication.setIs_love(object.get("is_love").getAsInt() == 1);
+                            MyApplication.setIs_boring(object.get("is_boring").getAsInt() == 1);
+                            MyApplication.setIs_needs(object.get("is_need").getAsInt() == 1);
                         }
                     }
+
+                    if (!hasPermissions(mContext, PERMISSIONS)) {
+                        ActivityCompat.requestPermissions((Activity) mContext,
+                                PERMISSIONS,
+                                0);
+                    } else {
+                        doOncreate();
+                    }
+
+                    doOncreate();
                 }
+
                 @Override
                 public void onFailure(retrofit2.Call<JsonObject> call, Throwable t) {
                     Toast.makeText(getApplication(), "FAILURE", Toast.LENGTH_LONG).show();
+
+                    if (!hasPermissions(mContext, PERMISSIONS)) {
+                        ActivityCompat.requestPermissions((Activity) mContext,
+                                PERMISSIONS,
+                                0);
+                    } else {
+                        doOncreate();
+                    }
+
+                    doOncreate();
+
                 }
             });
-        }
-
-
-        if (!hasPermissions(this, PERMISSIONS)) {
-            ActivityCompat.requestPermissions(this,
-                    PERMISSIONS,
-                    0);
         } else {
+            if (!hasPermissions(mContext, PERMISSIONS)) {
+                ActivityCompat.requestPermissions((Activity) mContext,
+                        PERMISSIONS,
+                        0);
+            } else {
+                doOncreate();
+            }
+
             doOncreate();
         }
-
-        doOncreate();
-
-        Intent intent = new Intent(MainActivity.this,Location.class);
-        startService(intent);
-
 
 
     } // end of onCreate
@@ -148,6 +175,7 @@ public class MainActivity extends TabActivity {
                 setTabColor(mTab);
             }
         });
+
     }
 
     public static void setTabColor(TabHost tabhost) {
@@ -160,7 +188,61 @@ public class MainActivity extends TabActivity {
         tabhost.getTabWidget().setCurrentTab(0);
 //        tabhost.getTabWidget().getChildAt(tabhost.getCurrentTab())
 //                .setBackgroundResource(R.drawable.round_tab_white); // selected
-
     }
 
+//    private Emitter.Listener onConnect = new Emitter.Listener() {
+//        @Override
+//        public void call(Object... args) {
+//            runOnUiThread(new Runnable() {
+//                @Override
+//                public void run() {
+//                    Toast.makeText(getApplicationContext(),
+//                            "Connected", Toast.LENGTH_LONG).show();
+//                    mSocket.emit("new location", "dddd");
+//                }
+//            });
+//        }
+//    };
+//
+//        private Emitter.Listener onDisconnect = new Emitter.Listener() {
+//            @Override
+//            public void call(Object... args) {
+//                runOnUiThread(new Runnable() {
+//                    @Override
+//                    public void run() {
+//                        Toast.makeText(getApplicationContext(),
+//                                "dis", Toast.LENGTH_LONG).show();
+//                    }
+//                });
+//            }
+//        };
+//
+//        private Emitter.Listener onConnectError = new Emitter.Listener() {
+//            @Override
+//            public void call(Object... args) {
+//                runOnUiThread(new Runnable() {
+//                    @Override
+//                    public void run() {
+//                        Toast.makeText(getApplicationContext(),
+//                                "Err", Toast.LENGTH_LONG).show();
+//                    }
+//                });
+//            }
+//        };
+//
+//    private Emitter.Listener onNewLocation = new Emitter.Listener() {
+//        @Override
+//        public void call(Object... args) {
+//            Log.d("???","??????");
+//            runOnUiThread(new Runnable() {
+//                @Override
+//                public void run() {
+//                    Toast.makeText(getApplicationContext(),
+//                            "ENew", Toast.LENGTH_LONG).show();
+//                }
+//            });
+//        }
+//    };
 }
+
+

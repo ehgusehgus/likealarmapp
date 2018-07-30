@@ -23,7 +23,7 @@ public class ServiceThread extends Thread {
             handler.sendEmptyMessage(0);//쓰레드에 있는 핸들러에게 메세지를 보냄
                 try{
                 Thread.sleep(3000); //10초씩 쉰다.
-            }catch (Exception e) {}
+            }catch (InterruptedException e) {}
         }
     }
 }
