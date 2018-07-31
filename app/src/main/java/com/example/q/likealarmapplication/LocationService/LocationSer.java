@@ -1,6 +1,7 @@
 package com.example.q.likealarmapplication.LocationService;
 
 import android.annotation.TargetApi;
+import android.app.Activity;
 import android.app.Notification;
 import android.app.NotificationChannel;
 import android.app.NotificationManager;
@@ -12,26 +13,36 @@ import android.graphics.Color;
 import android.location.Location;
 import android.location.LocationListener;
 import android.location.LocationManager;
+import android.os.Binder;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.IBinder;
+import android.support.v4.app.ActivityCompat;
 import android.util.Log;
 import android.widget.Toast;
 
+import com.example.q.likealarmapplication.HttpInterface;
 import com.example.q.likealarmapplication.MainActivity;
 import com.example.q.likealarmapplication.MyApplication;
 import com.example.q.likealarmapplication.R;
+import com.example.q.likealarmapplication.UserActivity.UserCreateActivity;
+import com.facebook.AccessToken;
 import com.google.gson.JsonObject;
 
 import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.net.URISyntaxException;
+import java.util.ArrayList;
 
 import io.socket.client.IO;
 import io.socket.client.Socket;
 import io.socket.emitter.Emitter;
+import retrofit2.Callback;
+import retrofit2.Response;
+import retrofit2.Retrofit;
+import retrofit2.converter.gson.GsonConverterFactory;
 
 public class LocationSer extends Service {
     NotificationManager Notifi_M;
@@ -39,6 +50,10 @@ public class LocationSer extends Service {
     Notification Notifi ;
     Socket mSocket;
     LocationManager lm;
+    AccessToken accessToken;
+    Retrofit retrofit;
+    HttpInterface httpInterface;
+    ArrayList<String> NearUser= new ArrayList<String>();
     private Location mLocation = new Location("a");
 
     public static final String LOCATION_SERVER_URL = "http://52.231.70.150:8080";
@@ -51,6 +66,13 @@ public class LocationSer extends Service {
         } catch (URISyntaxException e) {
             throw new RuntimeException(e);
         }
+
+        accessToken = AccessToken.getCurrentAccessToken();
+
+        retrofit = new Retrofit.Builder().addConverterFactory(GsonConverterFactory.create())
+                .baseUrl(HttpInterface.BaseURL)
+                .build();
+        httpInterface = retrofit.create(HttpInterface.class);
 
         mLocation.setLatitude(0);
         mLocation.setLongitude(0);
@@ -79,7 +101,7 @@ public class LocationSer extends Service {
             float accuracy = location.getAccuracy();    //정확도
             String provider = location.getProvider();   //위치제공자
 
-            mSocket.emit("new location", location.getLongitude(), location.getLatitude(), location.getAltitude());
+            mSocket.emit("new location", location.getLongitude(), location.getLatitude(), location.getAltitude(), accessToken.getUserId());
         }
 
         public void onProviderDisabled(String provider) {
@@ -97,6 +119,13 @@ public class LocationSer extends Service {
             Log.d("test", "onStatusChanged, provider:" + provider + ", status:" + status + " ,Bundle:" + extras);
         }
     };
+
+    public class LocalBinder extends Binder {
+        public LocationSer getService() {
+            // Return this instance of LocalService so clients can call public methods
+            return LocationSer.this;
+        }
+    }
 
 
     @Override
@@ -121,6 +150,7 @@ public class LocationSer extends Service {
                 .build();
 
         nm.notify(startId, notification);
+
         nm.cancel(startId);
 
         Notifi_M = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
@@ -131,7 +161,7 @@ public class LocationSer extends Service {
     }
 
     //서비스가 종료될 때 할 작업
-
+    @TargetApi(26)
     public void onDestroy() {
 
         mSocket.off(Socket.EVENT_CONNECT, onConnect);
@@ -146,6 +176,13 @@ public class LocationSer extends Service {
         thread = null;//쓰레기 값을 만들어서 빠르게 회수하라고 null을 넣어줌.
 
         lm.removeUpdates(mLocationListener);
+
+        NotificationManager mNotificationManager =
+                getSystemService(NotificationManager.class);
+        mNotificationManager.cancel(777);
+        mNotificationManager.cancel(778);
+        mNotificationManager.cancel(779);
+
     }
 
     class myServiceHandler extends Handler {
@@ -204,19 +241,25 @@ public class LocationSer extends Service {
             Log.d("????", data+"");
 
             Location getLoc = new Location("b");
+            String facebook_id="";
             try {
                 Log.d("location", data.get("longitude").toString() +" " + Double.parseDouble(data.get("latitude").toString())+" " + Double.parseDouble(data.get("altitude").toString())+" " );
+                Log.d("facebook2", facebook_id);
                 getLoc.setLongitude(Double.parseDouble(data.get("longitude").toString()));
                 getLoc.setAltitude(Double.parseDouble(data.get("altitude").toString()));
                 getLoc.setLatitude(Double.parseDouble(data.get("latitude").toString()));
+                facebook_id = data.get("facebook_id").toString();
             }catch(JSONException e){
             }
-            Log.d("???", mLocation.distanceTo(getLoc)+"");
 
+            final String facebook2 = facebook_id;
+            Log.d("?????",mLocation.distanceTo(getLoc)+"");
             if(mLocation.distanceTo(getLoc)<=50){
 
-                Intent intent = new Intent(LocationSer.this, MainActivity.class);
-                PendingIntent pendingIntent = PendingIntent.getActivity(LocationSer.this, 0, intent,PendingIntent.FLAG_UPDATE_CURRENT);
+                if(!NearUser.contains(facebook_id))
+                    NearUser.add(facebook_id);
+
+
                 NotificationManager mNotificationManager =
                         getSystemService(NotificationManager.class);
 
@@ -227,33 +270,117 @@ public class LocationSer extends Service {
                 int importance = NotificationManager.IMPORTANCE_HIGH;
 
                 NotificationChannel mChannel = new NotificationChannel(id, name, importance);
-
                 mChannel.setDescription(description);
-
                 mChannel.enableVibration(true);
-                mChannel.setVibrationPattern(new long[]{1000, 1000, 1000});
                 mNotificationManager.createNotificationChannel(mChannel);
 
+                Log.d("????", MyApplication.is_love+"  "+MyApplication.is_boring);
 
-                Notifi = new Notification.Builder(getApplicationContext())
-                        .setContentTitle("Content Title")
-                        .setContentText("Content Text")
-                        .setSmallIcon(R.drawable.heart)
-                        .setTicker("알림!!!")
-                        .setContentIntent(pendingIntent)
-                        .setChannelId("my_channel_01")
-                        .setVibrate(new long[]{1000, 1000})
-                        .build();
+                retrofit2.Call<JsonObject> getUserCall = httpInterface.getUser(facebook_id);
+                getUserCall.enqueue(new Callback<JsonObject>() {
+                    @Override
+                    public void onResponse(retrofit2.Call<JsonObject> call, Response<JsonObject> response) {
+                        JsonObject object = response.body().get("result").getAsJsonObject();
+                        if(MyApplication.is_love && object.get("is_love").getAsInt() == 1 && !MyApplication.is_loving){
+                            Intent intent = new Intent(LocationSer.this, MainActivity.class);
+                            intent.putExtra("from_notification", true);
+                            intent.putExtra("is_loving", true);
+                            intent.putExtra("facebook_id", facebook2);
+                            final PendingIntent pendingIntent = PendingIntent.getActivity(LocationSer.this, 0, intent,PendingIntent.FLAG_UPDATE_CURRENT);
 
-                //소리추가
-                Notifi.defaults |= Notification.DEFAULT_SOUND;
-                //알림 소리를 한번만 내도록
-                Notifi.flags |= Notification.FLAG_ONLY_ALERT_ONCE;
-                //확인하면 자동으로 알림이 제거 되도록
-                Notifi.flags |= Notification.FLAG_AUTO_CANCEL;
+                            Notifi = new Notification.Builder(getApplicationContext())
+                                    .setContentTitle("연애")
+                                    .setContentText("Content Text")
+                                    .setSmallIcon(R.drawable.heart)
+                                    .setTicker("알림!!!")
+                                    .setContentIntent(pendingIntent)
+                                    .setChannelId("my_channel_01")
+                                    .setVibrate(new long[]{1000, 1000})
+                                    .build();
+                            //소리추가
+                            Notifi.defaults |= Notification.DEFAULT_SOUND;
+                            //알림 소리를 한번만 내도록
+                            Notifi.flags |= Notification.FLAG_ONLY_ALERT_ONCE;
+                            //확인하면 자동으로 알림이 제거 되도록
+                            Notifi.flags |= Notification.FLAG_AUTO_CANCEL;
+                            Notifi_M.notify( 777 , Notifi);
+                            //토스트 띄우기
+                        }
+                        if(MyApplication.is_boring && (object.get("is_boring").getAsInt() == 1 && !MyApplication.is_boringing)){
 
-                Notifi_M.notify( 777 , Notifi);
-                //토스트 띄우기
+                            Intent intent = new Intent(LocationSer.this, MainActivity.class);
+                            intent.putExtra("from_notification", true);
+                            intent.putExtra("is_boringing", true);
+                            intent.putExtra("facebook_id", facebook2);
+
+                            final PendingIntent pendingIntent = PendingIntent.getActivity(LocationSer.this, 1, intent,PendingIntent.FLAG_UPDATE_CURRENT);
+
+                            Notifi = new Notification.Builder(getApplicationContext())
+                                    .setContentTitle("심심")
+                                    .setContentText("Content Text")
+                                    .setSmallIcon(R.drawable.heart)
+                                    .setTicker("알림!!!")
+                                    .setContentIntent(pendingIntent)
+                                    .setChannelId("my_channel_01")
+                                    .setVibrate(new long[]{1000, 1000})
+                                    .build();
+
+                            //소리추가
+                            Notifi.defaults |= Notification.DEFAULT_SOUND;
+                            //알림 소리를 한번만 내도록
+                            Notifi.flags |= Notification.FLAG_ONLY_ALERT_ONCE;
+                            //확인하면 자동으로 알림이 제거 되도록
+                            Notifi.flags |= Notification.FLAG_AUTO_CANCEL;
+                            Notifi_M.notify( 778 , Notifi);
+                            //토스트 띄우기
+                        }
+                        if(MyApplication.is_needs && (object.get("is_need").getAsInt() == 1 && !MyApplication.is_needing)){
+
+                            Intent intent = new Intent(LocationSer.this, MainActivity.class);
+                            intent.putExtra("from_notification", true);
+                            intent.putExtra("is_needing", true);
+                            intent.putExtra("facebook_id", facebook2);
+
+                            final PendingIntent pendingIntent = PendingIntent.getActivity(LocationSer.this, 2, intent,PendingIntent.FLAG_UPDATE_CURRENT);
+
+                            Notifi = new Notification.Builder(getApplicationContext())
+                                    .setContentTitle("구인")
+                                    .setContentText("Content Text")
+                                    .setSmallIcon(R.drawable.heart)
+                                    .setTicker("알림!!!")
+                                    .setContentIntent(pendingIntent)
+                                    .setChannelId("my_channel_01")
+                                    .setVibrate(new long[]{1000, 1000})
+                                    .build();
+
+                            //소리추가
+                            Notifi.defaults |= Notification.DEFAULT_SOUND;
+                            //알림 소리를 한번만 내도록
+                            Notifi.flags |= Notification.FLAG_ONLY_ALERT_ONCE;
+                            //확인하면 자동으로 알림이 제거 되도록
+                            Notifi.flags |= Notification.FLAG_AUTO_CANCEL;
+
+                            Notifi_M.notify( 779 , Notifi);
+                            //토스트 띄우기
+                        }
+                    }
+                    @Override
+                    public void onFailure(retrofit2.Call<JsonObject> call, Throwable t) {
+                        Toast.makeText(getApplication(), "FAILURE22", Toast.LENGTH_LONG).show();
+                    }
+                });
+            }
+            else{
+                if(NearUser.contains(facebook_id)){
+                    NearUser.remove(facebook_id);
+                }
+                NotificationManager mNotificationManager =
+                        getSystemService(NotificationManager.class);
+                if(NearUser.size() == 0) {
+                    mNotificationManager.cancel(777);
+                    mNotificationManager.cancel(778);
+                    mNotificationManager.cancel(779);
+                }
             }
         }
     };

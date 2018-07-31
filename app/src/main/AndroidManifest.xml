@@ -3,8 +3,8 @@
     package="com.example.q.likealarmapplication">
 
     <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
-    <uses-permission android:name="android.permission.INTERNET"/>
-    <uses-permission android:name = "android.permission.VIBRATE" />
+    <uses-permission android:name="android.permission.INTERNET" />
+    <uses-permission android:name="android.permission.VIBRATE" />
 
     <application
         android:name=".MyApplication"
@@ -36,18 +36,19 @@
         <activity
             android:name=".UserActivity.LoginActivity"
             android:theme="@style/Theme.AppCompat.NoActionBar" />
-        <activity android:name=".FirstPageActivity.FirstPageActivity"></activity>
+        <activity android:name=".FirstPageActivity.FirstPageActivity" />
         <activity
             android:name=".SecondPageActivity.SecondPageActivity"
             android:theme="@style/Theme.AppCompat.NoActionBar" />
-        <activity android:name=".UserActivity.UserCreateActivity"/>
-
-        <activity android:name=".ThirdPageActivity.ThirdPageActivity"/>
+        <activity android:name=".UserActivity.UserCreateActivity" />
+        <activity android:name=".ThirdPageActivity.ThirdPageActivity" />
 
         <service
             android:name=".LocationService.LocationSer"
             android:enabled="true"
             android:exported="true" />
+
+        <activity android:name=".ChatActivity.ChatActivity"></activity>
     </application>
 
 </manifest>

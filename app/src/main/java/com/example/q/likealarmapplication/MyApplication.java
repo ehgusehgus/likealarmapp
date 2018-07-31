@@ -10,12 +10,15 @@ import io.socket.client.Socket;
 
 public class MyApplication extends Application {
 
-    public static final String CHAT_SERVER_URL = "http://52.231.70.150:8080";
+    public static final String CHAT_SERVER_URL = "http://52.231.70.150:8070";
     //public static final String LOCATION_SERVER_URL = "http://52.231.64.206:8080";
     public static String nickname = "";
     public static boolean is_love = false;
     public static boolean is_boring = false;
     public static boolean is_needs = false;
+    public static boolean is_loving = false;
+    public static boolean is_boringing = false;
+    public static boolean is_needing = false;
 
     private Socket mSocket;
     {
