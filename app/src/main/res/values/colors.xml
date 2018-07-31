@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <color name="colorPrimary">#49beff</color>
-    <color name="colorPrimaryDark">#34314c</color>
+    <color name="colorPrimaryDark">#65dce5</color>
     <color name="colorAccent">#0d5d98</color>
     <color name="accent">#0d5d98</color>
     <color name="address">#2f7092</color>
@@ -15,4 +15,17 @@
     <color name="followingBg">#49beff</color>
     <color name="grad">#e5e5e5</color>
 
+
+    <color name="username0">#e21400</color>
+    <color name="username1">#91580f</color>
+    <color name="username2">#f8a700</color>
+    <color name="username3">#f78b00</color>
+    <color name="username4">#58dc00</color>
+    <color name="username5">#287b00</color>
+    <color name="username6">#a8f07a</color>
+    <color name="username7">#4ae8c4</color>
+    <color name="username8">#3b88eb</color>
+    <color name="username9">#3824aa</color>
+    <color name="username10">#a700ff</color>
+    <color name="username11">#d300e7</color>
 </resources>

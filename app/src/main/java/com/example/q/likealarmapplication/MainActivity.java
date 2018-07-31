@@ -4,14 +4,20 @@ import android.Manifest;
 import android.app.Activity;
 import android.app.TabActivity;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.os.Bundle;
 import android.support.v4.app.ActivityCompat;
+import android.support.v7.app.AlertDialog;
 import android.util.Log;
+import android.view.LayoutInflater;
+import android.view.View;
+import android.widget.EditText;
 import android.widget.TabHost;
 import android.widget.Toast;
 
+import com.example.q.likealarmapplication.ChatActivity.ChatActivity;
 import com.example.q.likealarmapplication.FirstPageActivity.FirstPageActivity;
 import com.example.q.likealarmapplication.SecondPageActivity.SecondPageActivity;
 import com.example.q.likealarmapplication.ThirdPageActivity.Profile;
@@ -39,7 +45,9 @@ public class MainActivity extends TabActivity {
     Retrofit retrofit;
     HttpInterface httpInterface;
     Context mContext;
+    String Username="";
     private Socket mSocket;
+    private Boolean from_notification = false;
 
 
     @Override
@@ -89,8 +97,7 @@ public class MainActivity extends TabActivity {
                             startActivity(intent);
                         } else {
 
-                            String res = object.get("name").toString();
-                            Toast.makeText(getApplication(), res, Toast.LENGTH_LONG).show();
+                            Username = object.get("name").toString();
                             MyApplication.setIs_love(object.get("is_love").getAsInt() == 1);
                             MyApplication.setIs_boring(object.get("is_boring").getAsInt() == 1);
                             MyApplication.setIs_needs(object.get("is_need").getAsInt() == 1);
@@ -135,6 +142,95 @@ public class MainActivity extends TabActivity {
 
             doOncreate();
         }
+
+        String facebook_id ="";
+
+        try{
+            Intent i = getIntent();
+            Bundle extras = i.getExtras();
+            from_notification = extras.getBoolean("from_notification");
+            MyApplication.is_loving = extras.getBoolean("is_loving");
+            MyApplication.is_boringing = extras.getBoolean("is_boringing");
+            MyApplication.is_needing = extras.getBoolean("is_needing");
+            facebook_id = extras.getString("facebook_id");
+            Log.d("boolbol", extras.getBoolean("is_loving")+ " " +extras.getBoolean("is_boringing")+" "+extras.getBoolean("is_needing"));
+        }catch(Exception e){
+        }
+
+        final String facebook_id2= facebook_id;
+
+        if(from_notification){
+            LayoutInflater li = LayoutInflater.from(mContext);
+            View promptsView = li.inflate(R.layout.prompts, null);
+            final AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(
+                    mContext);
+
+            // set prompts.xml to alertdialog builder
+
+            alertDialogBuilder.setView(promptsView);
+
+            // set dialog message
+            alertDialogBuilder
+                    .setCancelable(false)
+                    .setPositiveButton("참가",
+                            new DialogInterface.OnClickListener() {
+                                public void onClick(
+                                        DialogInterface dialog,
+                                        int id) {
+                                    Intent intent = new Intent(mContext, ChatActivity.class);
+                                    intent.putExtra("name", Username);
+                                    if(MyApplication.is_loving)
+                                        intent.putExtra("type","is_loving");
+                                    if(MyApplication.is_boringing)
+                                        intent.putExtra("type","is_boringing");
+                                    if(MyApplication.is_needing)
+                                        intent.putExtra("type","is_needing");
+                                    intent.putExtra("facebook_id", facebook_id2);
+                                    startActivity(intent);
+                                    finish();
+                                    // get user input and set it to
+                                    // result
+                                    // edit text
+                                }
+                            })
+                    .setNegativeButton("입구컷",
+                            new DialogInterface.OnClickListener() {
+                                public void onClick(
+                                        DialogInterface dialog,
+                                        int id) {
+                                    if(MyApplication.is_loving)
+                                        MyApplication.is_loving = false;
+                                    if(MyApplication.is_boringing)
+                                        MyApplication.is_boringing = false;
+                                    if(MyApplication.is_needing)
+                                        MyApplication.is_needing = false;
+
+                                    finish();
+                                }
+                            });
+
+//            alertDialogBuilder.setNeutralButton("INSERT",
+//                    new DialogInterface.OnClickListener() {
+//                        public void onClick(
+//                                DialogInterface dialog,
+//                                int id) {
+//                            // get user input and set it to
+//                            // result
+//                            // edit text
+//
+//                        }
+//                    });
+
+
+            // create alert dialog
+            AlertDialog alertDialog = alertDialogBuilder.create();
+
+            // show it
+            alertDialog.show();
+
+
+        }
+
 
 
     } // end of onCreate
