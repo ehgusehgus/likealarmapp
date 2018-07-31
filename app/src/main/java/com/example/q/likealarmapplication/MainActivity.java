@@ -84,6 +84,7 @@ public class MainActivity extends TabActivity {
             return;
         }
 
+        Log.d("????","?????");
         //nickname
         if (MyApplication.nickname.equals("")) {
             retrofit2.Call<JsonObject> getUserCall = httpInterface.getUser(accessToken.getUserId());

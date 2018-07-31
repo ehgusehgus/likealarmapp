@@ -11,6 +11,7 @@ import android.widget.Toast;
 import com.example.q.likealarmapplication.HttpInterface;
 import com.example.q.likealarmapplication.MainActivity;
 import com.example.q.likealarmapplication.MyApplication;
+import com.example.q.likealarmapplication.ProfileActivity.ProfilecreateActivity;
 import com.example.q.likealarmapplication.R;
 import com.facebook.AccessToken;
 import com.google.gson.JsonObject;
@@ -53,6 +54,8 @@ public class UserCreateActivity extends AppCompatActivity{
                         JsonObject object = response.body();
                         if(object != null){
                             MyApplication.setNickname(text);
+                            Intent intent = new Intent(getApplication(), ProfilecreateActivity.class);
+                            startActivity(intent);
                             finish();
                         } else {
                             Toast.makeText(getApplication(), "등록실패!!", Toast.LENGTH_LONG).show();
