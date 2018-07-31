@@ -7,6 +7,11 @@
     android:scrollbars="vertical"
     tools:context=".ThirdPageActivity.ThirdPageActivity">
 
+    <ScrollView
+        android:id="@+id/infobox"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        >
 
     <RelativeLayout
         android:id="@+id/rellay"
@@ -15,6 +20,8 @@
         android:background="@color/grad"
         android:paddingBottom="10dp">
 
+
+
         <RelativeLayout
             android:id="@+id/imgUser"
             android:layout_width="wrap_content"
@@ -22,6 +29,8 @@
 
             android:layout_centerHorizontal="true"
             android:background="@color/circleBorder">
+
+
 
             <ImageView
                 android:layout_width="120dp"
@@ -115,11 +124,7 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent">
 
-        <ScrollView
-            android:id="@+id/infobox"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            >
+
 
 
             <LinearLayout
@@ -284,8 +289,10 @@
 
             </LinearLayout>
 
-        </ScrollView>
+
 
     </RelativeLayout>
+
+</ScrollView>
 
 </RelativeLayout>

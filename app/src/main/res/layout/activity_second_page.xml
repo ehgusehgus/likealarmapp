@@ -1,34 +1,43 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:baselineAligned="false"
-    android:orientation="vertical"
-    tools:context=".SecondPageActivity.SecondPageActivity"
-    android:background="@drawable/rround">
+    android:layout_height="match_parent">
 
-    <TextView
-        android:id="@+id/textView2"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="결과창"
-        android:textAppearance="?android:attr/textAppearanceLarge" />
-
-    <ToggleButton
-        android:id="@+id/toggle1"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_gravity="right"
-        android:textOff="정보 열기"
-        android:textOn="정보 닫기" />
-
-    <fragment
-        android:id="@+id/map"
-        class="com.google.android.gms.maps.MapFragment"
+    <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:app="http://schemas.android.com/apk/res-auto"
+        xmlns:tools="http://schemas.android.com/tools"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        tools:context="com.example.currentplacedetailsonmap.MapsActivityCurrentPlace"
-        />
+        android:background="@drawable/rround"
+        android:baselineAligned="false"
+        android:orientation="vertical">
 
-</LinearLayout>
+        <!--<ToggleButton-->
+        <!--android:id="@+id/toggle1"-->
+        <!--android:layout_width="wrap_content"-->
+        <!--android:layout_height="wrap_content"-->
+        <!--android:layout_gravity="right"-->
+        <!--android:textOff="정보 열기"-->
+        <!--android:textOn="정보 닫기" />-->
+
+        <fragment
+            android:id="@+id/map"
+            class="com.google.android.gms.maps.MapFragment"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            tools:context="com.example.currentplacedetailsonmap.MapsActivityCurrentPlace" />
+
+
+    </LinearLayout>
+
+    <android.support.design.widget.FloatingActionButton
+        android:id="@+id/fab"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:layout_alignParentEnd="true"
+        android:layout_marginBottom="14dp"
+        android:clickable="true" />
+</RelativeLayout>
