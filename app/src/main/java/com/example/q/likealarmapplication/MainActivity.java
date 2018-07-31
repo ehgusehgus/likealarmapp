@@ -14,6 +14,8 @@ import android.widget.Toast;
 
 import com.example.q.likealarmapplication.FirstPageActivity.FirstPageActivity;
 import com.example.q.likealarmapplication.SecondPageActivity.SecondPageActivity;
+import com.example.q.likealarmapplication.ThirdPageActivity.Profile;
+import com.example.q.likealarmapplication.ThirdPageActivity.ThirdPageActivity;
 import com.example.q.likealarmapplication.UserActivity.LoginActivity;
 import com.example.q.likealarmapplication.UserActivity.UserCreateActivity;
 import com.facebook.AccessToken;
@@ -155,15 +157,15 @@ public class MainActivity extends TabActivity {
         Intent intent;
 
         intent = new Intent(this, FirstPageActivity.class);
-        spec = mTab.newTabSpec("a").setIndicator("aaa").setContent(intent);
+        spec = mTab.newTabSpec("a").setIndicator("[  ON / OFF  ]").setContent(intent);
         mTab.addTab(spec);
 
         intent = new Intent(this, SecondPageActivity.class);
-        spec = mTab.newTabSpec("b").setIndicator("bbb").setContent(intent);
+        spec = mTab.newTabSpec("b").setIndicator("[  MAP  ]").setContent(intent);
         mTab.addTab(spec);
 
-        intent = new Intent(this, FirstPageActivity.class);
-        spec = mTab.newTabSpec("c").setIndicator("ccc").setContent(intent);
+        intent = new Intent(this, ThirdPageActivity.class);
+        spec = mTab.newTabSpec("c").setIndicator("[  PROFILE  ]").setContent(intent);
         mTab.addTab(spec);
 
 

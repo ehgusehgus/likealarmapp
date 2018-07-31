@@ -55,7 +55,7 @@ public class SecondPageActivity extends AppCompatActivity implements OnMapReadyC
 
         // GPS 위치정보 수신
         tv = (TextView) findViewById(R.id.textView2);
-        tv.setText("위치정보 미수신중");
+        tv.setText("< 위치정보 >");
         tb = (ToggleButton) findViewById(R.id.toggle1);
 
         final LocationManager lm = (LocationManager) getSystemService(Context.LOCATION_SERVICE); //Location 객체 얻어옴
@@ -77,7 +77,7 @@ public class SecondPageActivity extends AppCompatActivity implements OnMapReadyC
                                 mLocationListener);
                         onMapReady(mMap);
                     } else {
-                        tv.setText("위치정보 미수신중");
+                        tv.setText("< 위치정보 >");
                         lm.removeUpdates(mLocationListener);  // 미수신할때는 반드시 자원해체를 해주어야 한다.
                     }
                 } catch (SecurityException ex) {
@@ -124,7 +124,7 @@ public class SecondPageActivity extends AppCompatActivity implements OnMapReadyC
     @Override
     public void onMapReady(final GoogleMap map) {
         mMap = map;
-        LocationManager locationManager;
+//        LocationManager locationManager;
 
 
         if ((ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED || ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) == PackageManager.PERMISSION_GRANTED)) {
@@ -154,25 +154,25 @@ public class SecondPageActivity extends AppCompatActivity implements OnMapReadyC
 
     }
 
-    public void onAddMarker(){
-        LatLng position = new LatLng(latitude , longitude);
-
-        //나의위치 마커
-        MarkerOptions mymarker = new MarkerOptions()
-                .position(position);   //마커위치
-
-        // 반경 1KM원
-        CircleOptions circle1KM = new CircleOptions().center(position) //원점
-                .radius(1000)      //반지름 단위 : m
-                .strokeWidth(0f)  //선너비 0f : 선없음
-                .fillColor(Color.parseColor("#8800ff")); //배경색
-
-        //마커추가
-        this.mMap.addMarker(mymarker);
-
-        //원추가
-        this.mMap.addCircle(circle1KM);
-    }
+//    public void onAddMarker(){
+////        LatLng position = new LatLng(latitude , longitude);
+////
+////        //나의위치 마커
+////        MarkerOptions mymarker = new MarkerOptions()
+////                .position(position);   //마커위치
+////
+////        // 반경 1KM원
+////        CircleOptions circle1KM = new CircleOptions().center(position) //원점
+////                .radius(1000)      //반지름 단위 : m
+////                .strokeWidth(0f)  //선너비 0f : 선없음
+////                .fillColor(Color.parseColor("#8800ff")); //배경색
+////
+////        //마커추가
+////        this.mMap.addMarker(mymarker);
+////
+////        //원추가
+////        this.mMap.addCircle(circle1KM);
+////    }
 
 
 

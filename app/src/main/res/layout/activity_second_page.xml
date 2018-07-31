@@ -5,7 +5,8 @@
     android:layout_height="match_parent"
     android:baselineAligned="false"
     android:orientation="vertical"
-    tools:context=".SecondPageActivity.SecondPageActivity">
+    tools:context=".SecondPageActivity.SecondPageActivity"
+    android:background="@drawable/rround">
 
     <TextView
         android:id="@+id/textView2"
@@ -18,8 +19,9 @@
         android:id="@+id/toggle1"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:textOff="위치정보수신시작"
-        android:textOn="위치정보수신종료" />
+        android:layout_gravity="right"
+        android:textOff="정보 열기"
+        android:textOn="정보 닫기" />
 
     <fragment
         android:id="@+id/map"

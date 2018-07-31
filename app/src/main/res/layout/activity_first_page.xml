@@ -4,7 +4,8 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".FirstPageActivity.FirstPageActivity">
+    tools:context=".FirstPageActivity.FirstPageActivity"
+    android:background="#f2e9e9">
 
     <Switch
         android:id="@+id/switch1"
@@ -16,10 +17,10 @@
         android:layout_marginRight="8dp"
         android:layout_marginStart="8dp"
         android:layout_marginTop="8dp"
-        android:background="#ffcccc"
+        android:background="@drawable/round"
         android:gravity="center"
         android:padding="50dp"
-        android:text="연애 모드 "
+        android:text="연애 MODE "
         android:textColor="#000000"
         android:textOff="OFF"
         android:textOn="ON"
@@ -42,10 +43,10 @@
         android:layout_marginRight="8dp"
         android:layout_marginStart="8dp"
         android:layout_marginTop="8dp"
-        android:background="#ffffcc"
+        android:background="@drawable/roundd"
         android:gravity="center"
         android:padding="50dp"
-        android:text="심심 모드 "
+        android:text="심심 MODE "
         android:textColor="#000000"
         android:textOff="OFF"
         android:textOn="ON"
@@ -60,7 +61,7 @@
 
     <Switch
         android:id="@+id/switch3"
-        android:layout_width="243dp"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginBottom="8dp"
         android:layout_marginEnd="8dp"
@@ -68,10 +69,10 @@
         android:layout_marginRight="8dp"
         android:layout_marginStart="8dp"
         android:layout_marginTop="8dp"
-        android:background="#ccffff"
+        android:background="@drawable/rounddd"
         android:gravity="center"
         android:padding="50dp"
-        android:text="찾기 모드 "
+        android:text="찾기 MODE "
         android:textColor="#000000"
         android:textOff="OFF"
         android:textOn="ON"
