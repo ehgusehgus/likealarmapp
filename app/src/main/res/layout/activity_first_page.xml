@@ -72,7 +72,7 @@
         android:background="@drawable/rounddd"
         android:gravity="center"
         android:padding="50dp"
-        android:text="찾기 MODE "
+        android:text="구인 MODE "
         android:textColor="#000000"
         android:textOff="OFF"
         android:textOn="ON"

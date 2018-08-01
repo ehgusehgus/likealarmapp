@@ -48,7 +48,6 @@
             android:enabled="true"
             android:exported="true" />
 
-        <activity android:name=".ThirdPageActivity.Profile" />
         <activity android:name=".ChatActivity.ChatActivity" />
         <activity
             android:name=".ProfileActivity.ProfilecreateActivity"

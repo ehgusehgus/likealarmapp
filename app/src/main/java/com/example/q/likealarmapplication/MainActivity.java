@@ -13,7 +13,6 @@ import android.support.v7.app.AlertDialog;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
-import android.widget.EditText;
 import android.widget.TabHost;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -23,19 +22,16 @@ import com.example.q.likealarmapplication.FirstPageActivity.FirstPageActivity;
 import com.example.q.likealarmapplication.IdealActivity.IdealCreateActivity;
 import com.example.q.likealarmapplication.ProfileActivity.ProfilecreateActivity;
 import com.example.q.likealarmapplication.SecondPageActivity.SecondPageActivity;
-import com.example.q.likealarmapplication.ThirdPageActivity.Profile;
 import com.example.q.likealarmapplication.ThirdPageActivity.ThirdPageActivity;
 import com.example.q.likealarmapplication.UserActivity.LoginActivity;
 import com.example.q.likealarmapplication.UserActivity.UserCreateActivity;
 import com.facebook.AccessToken;
 import com.google.gson.JsonObject;
 
-import io.socket.emitter.Emitter;
 import retrofit2.Callback;
 import retrofit2.Response;
 import retrofit2.Retrofit;
 import retrofit2.converter.gson.GsonConverterFactory;
-import io.socket.client.IO;
 import io.socket.client.Socket;
 
 public class MainActivity extends TabActivity {
