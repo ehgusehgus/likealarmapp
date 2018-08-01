@@ -24,7 +24,6 @@
         android:layout_width="122dp"
         android:layout_height="23dp"
         android:layout_alignEnd="@+id/view"
-
         android:layout_alignParentBottom="true"
         android:layout_gravity="right"
         app:layout_constraintBottom_toBottomOf="parent"
@@ -56,17 +55,21 @@
             android:layout_height="wrap_content"
             android:layout_below="@id/imageView"
             android:orientation="vertical"
-            android:layout_marginBottom="30dp">
+            android:layout_marginBottom="60dp"
+            >
 
         <TextView
+            android:fontFamily="@font/font3"
         android:layout_width="301dp"
-        android:layout_height="wrap_content"
+        android:layout_height="match_parent"
         android:textSize="15dp"
             android:layout_marginLeft="40dp"
         android:text="* 이름 :"
-        android:layout_marginBottom="3dp"/>
+        android:layout_marginBottom="3dp"
+            />
 
         <TextView
+            android:fontFamily="@font/font3"
             android:id="@+id/getText1"
             android:layout_width="301dp"
             android:layout_height="wrap_content"
@@ -75,6 +78,7 @@
             android:layout_marginBottom="7dp"/>
 
         <TextView
+            android:fontFamily="@font/font3"
             android:layout_width="301dp"
             android:layout_height="wrap_content"
             android:textSize="15dp"
@@ -83,6 +87,7 @@
             android:layout_marginBottom="3dp"/>
 
         <TextView
+            android:fontFamily="@font/font3"
             android:id="@+id/getText2"
             android:layout_width="301dp"
             android:layout_height="wrap_content"
@@ -91,6 +96,7 @@
             android:layout_marginBottom="7dp"/>
 
         <TextView
+            android:fontFamily="@font/font3"
             android:layout_width="301dp"
             android:layout_height="wrap_content"
             android:textSize="15dp"
@@ -99,6 +105,7 @@
             android:layout_marginBottom="3dp"/>
 
         <TextView
+            android:fontFamily="@font/font3"
             android:id="@+id/getText3"
             android:layout_width="301dp"
             android:layout_height="wrap_content"
@@ -107,6 +114,7 @@
             android:layout_marginBottom="7dp"/>
 
         <TextView
+            android:fontFamily="@font/font3"
             android:layout_width="301dp"
             android:layout_height="wrap_content"
             android:textSize="15dp"
@@ -115,6 +123,7 @@
             android:layout_marginBottom="3dp"/>
 
         <TextView
+            android:fontFamily="@font/font3"
             android:id="@+id/getText4"
             android:layout_width="301dp"
             android:layout_height="wrap_content"
@@ -123,6 +132,7 @@
             android:layout_marginBottom="7dp"/>
 
         <TextView
+            android:fontFamily="@font/font3"
             android:layout_width="301dp"
             android:layout_height="wrap_content"
             android:textSize="15dp"
@@ -130,15 +140,17 @@
             android:text="* 성격 :"
             android:layout_marginBottom="3dp"/>
 
-        <TextView
-            android:id="@+id/getText5"
-            android:layout_width="301dp"
-            android:layout_height="wrap_content"
-            android:textSize="25dp"
-            android:layout_marginLeft="60dp"
-            android:layout_marginBottom="7dp"/>
+            <TextView
+                android:id="@+id/getText5"
+                android:layout_width="250dp"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="7dp"
+                android:layout_marginLeft="60dp"
+                android:fontFamily="@font/font3"
+                android:textSize="25dp" />
 
         <TextView
+            android:fontFamily="@font/font3"
             android:layout_width="301dp"
             android:layout_height="wrap_content"
             android:textSize="15dp"
@@ -147,6 +159,7 @@
             android:layout_marginBottom="3dp"/>
 
         <TextView
+            android:fontFamily="@font/font3"
             android:id="@+id/getText6"
             android:layout_width="301dp"
             android:layout_height="wrap_content"

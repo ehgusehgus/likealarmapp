@@ -22,6 +22,7 @@ import com.example.q.likealarmapplication.FirstPageActivity.FirstPageActivity;
 import com.example.q.likealarmapplication.IdealActivity.IdealCreateActivity;
 import com.example.q.likealarmapplication.ProfileActivity.ProfilecreateActivity;
 import com.example.q.likealarmapplication.SecondPageActivity.SecondPageActivity;
+import com.example.q.likealarmapplication.ThirdPageActivity.ThirdPAgeActivity2;
 import com.example.q.likealarmapplication.ThirdPageActivity.ThirdPageActivity;
 import com.example.q.likealarmapplication.UserActivity.LoginActivity;
 import com.example.q.likealarmapplication.UserActivity.UserCreateActivity;
@@ -349,7 +350,7 @@ public class MainActivity extends TabActivity {
         spec = mTab.newTabSpec("b").setIndicator("[  MAP  ]").setContent(intent);
         mTab.addTab(spec);
 
-        intent = new Intent(this, ThirdPageActivity.class);
+        intent = new Intent(this, ThirdPAgeActivity2.class);
         spec = mTab.newTabSpec("c").setIndicator("[  PROFILE  ]").setContent(intent);
         mTab.addTab(spec);
 
