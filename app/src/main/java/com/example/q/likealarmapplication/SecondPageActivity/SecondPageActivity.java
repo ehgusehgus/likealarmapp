@@ -52,7 +52,8 @@ public class SecondPageActivity extends AppCompatActivity implements OnMapReadyC
 
     public static final String BROADCAST_ACTION="com.truiton.broadcast.string";
 
-    MyBroadCastReceiver myBroadCastReceiver;
+    private final MyBroadCastReceiver myBroadCastReceiver = new MyBroadCastReceiver();
+
     class MyBroadCastReceiver extends BroadcastReceiver
     {
 
@@ -75,14 +76,14 @@ public class SecondPageActivity extends AppCompatActivity implements OnMapReadyC
             }
         }
     }
-
-    @Override
-    protected void onDestroy() {
-        super.onDestroy();
-
-        // make sure to unregister your receiver after finishing of this activity
-        unregisterReceiver(myBroadCastReceiver);
-    }
+//
+//    @Override
+//    protected void onDestroy() {
+//        super.onDestroy();
+//
+//        // make sure to unregister your receiver after finishing of this activity
+//        unregisterReceiver(myBroadCastReceiver);
+//    }
 
     private void registerMyReceiver() {
         try
@@ -90,27 +91,28 @@ public class SecondPageActivity extends AppCompatActivity implements OnMapReadyC
             IntentFilter intentFilter = new IntentFilter();
             intentFilter.addAction(BROADCAST_ACTION);
             registerReceiver(myBroadCastReceiver, intentFilter);
+            Log.d("!!!!!", "dfsfdfdsf");
         }
         catch (Exception ex)
         {
+            Log.d("!!!!!", ex+"");
+
             ex.printStackTrace();
         }
     }
 
-    @Override
-    public void onResume() {
-        super.onResume();
-        IntentFilter filter = new IntentFilter();
-        registerMyReceiver();
-    }
+//    @Override
+//    public void onResume() {
+//        super.onResume();
+//        IntentFilter filter = new IntentFilter();
+//        registerMyReceiver();
+//    }
 
     @TargetApi(26)
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_second_page);
-
-        registerMyReceiver();
 
         FragmentManager fragmentManager = getFragmentManager();
         MapFragment mapFragment = (MapFragment) fragmentManager.findFragmentById(R.id.map);
@@ -150,6 +152,7 @@ public class SecondPageActivity extends AppCompatActivity implements OnMapReadyC
                 }
             }
         });
+        registerMyReceiver();
 
     }
 
@@ -252,7 +255,7 @@ public class SecondPageActivity extends AppCompatActivity implements OnMapReadyC
         else{
             circle1KM = new CircleOptions().center(position) //원점
                     .radius(100)      //반지름 단위 : m
-                    .fillColor(0x220000FF)
+                    .fillColor(0x22FF0000)
                     .strokeWidth(0f);
         }
 
