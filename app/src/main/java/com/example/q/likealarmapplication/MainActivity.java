@@ -261,7 +261,7 @@ public class MainActivity extends TabActivity {
 
             // set dialog message
             alertDialogBuilder
-                    .setCancelable(false)
+                    .setCancelable(true)
                     .setPositiveButton("참가",
                             new DialogInterface.OnClickListener() {
                                 public void onClick(

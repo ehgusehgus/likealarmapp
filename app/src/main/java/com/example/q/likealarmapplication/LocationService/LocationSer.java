@@ -426,6 +426,8 @@ public class LocationSer extends Service {
             return false;
         }
 //        mine = mine_2.get("result").getAsJsonObject();
+        if(mine ==null)
+            return false;
 
         final String myname = mine.get("name").getAsString();
         final String mysex = mine.get("sex").getAsString();
@@ -440,6 +442,7 @@ public class LocationSer extends Service {
         final String myalcohol = mine.get("alcohol").getAsString();
 
 
+
         retrofit2.Call<JsonObject> getUserIdeal = httpInterface.getUserIdeal(facebook_other);
         JsonObject your_a;
         JsonObject your;
@@ -451,6 +454,9 @@ public class LocationSer extends Service {
             return false;
         }
 //        your = your_a.get("result").getAsJsonObject();
+
+        if(your ==null)
+            return false;
 
         String yoursex = your.get("sex").getAsString();
         ArrayList<String> yoursexlist= new ArrayList<String>();
