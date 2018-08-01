@@ -198,10 +198,10 @@ public class LocationSer extends Service {
                         10, // 통지사이의 최소 시간간격 (miliSecond)
                         1, // 통지사이의 최소 변경거리 (m)
                         mLocationListener);
-//                lm.requestLocationUpdates(LocationManager.NETWORK_PROVIDER, // 등록할 위치제공자
-//                        10, // 통지사이의 최소 시간간격 (miliSecond)
-//                        1, // 통지사이의 최소 변경거리 (m)
-//                        mLocationListener);
+                lm.requestLocationUpdates(LocationManager.NETWORK_PROVIDER, // 등록할 위치제공자
+                        10, // 통지사이의 최소 시간간격 (miliSecond)
+                        1, // 통지사이의 최소 변경거리 (m)
+                        mLocationListener);
             } catch (SecurityException ex) {
 
             }

@@ -20,6 +20,7 @@ import android.widget.Toast;
 
 import com.example.q.likealarmapplication.ChatActivity.ChatActivity;
 import com.example.q.likealarmapplication.FirstPageActivity.FirstPageActivity;
+import com.example.q.likealarmapplication.IdealActivity.IdealCreateActivity;
 import com.example.q.likealarmapplication.ProfileActivity.ProfilecreateActivity;
 import com.example.q.likealarmapplication.SecondPageActivity.SecondPageActivity;
 import com.example.q.likealarmapplication.ThirdPageActivity.Profile;
@@ -99,7 +100,8 @@ public class MainActivity extends TabActivity {
                             Intent intent = new Intent(getApplication(), UserCreateActivity.class);
                             startActivity(intent);
                         } else {
-                            Username = object.get("name").toString();
+
+                            Username = object.get("name").getAsString();
                             MyApplication.setIs_love(object.get("is_love").getAsInt() == 1);
                             MyApplication.setIs_boring(object.get("is_boring").getAsInt() == 1);
                             MyApplication.setIs_needs(object.get("is_need").getAsInt() == 1);
@@ -111,10 +113,31 @@ public class MainActivity extends TabActivity {
                                     JsonObject object = response.body().get("result").getAsJsonObject();
                                     if (object != null) {
                                         if (object.get("name") == null) {
+                                            Log.d("????", Username);
                                             Intent intent = new Intent(getApplication(), ProfilecreateActivity.class);
-                                            intent.putExtra("username", MyApplication.nickname);
+                                            intent.putExtra("username", Username);
                                             startActivity(intent);
                                         } else {
+                                            retrofit2.Call<JsonObject> getUserProfile = httpInterface.getUserIdeal(accessToken.getUserId());
+                                            getUserProfile.enqueue(new Callback<JsonObject>() {
+                                                @Override
+                                                public void onResponse(retrofit2.Call<JsonObject> call, Response<JsonObject> response) {
+                                                    Log.d("????",response.body().toString());
+                                                    JsonObject object = response.body().get("result").getAsJsonObject();
+                                                    Log.d("????",object.toString());
+                                                    if (object != null) {
+                                                        if (object.get("sex") == null) {
+                                                            Intent intent = new Intent(getApplication(), IdealCreateActivity.class);
+                                                            startActivity(intent);
+                                                        } else {
+                                                        }
+                                                    }
+                                                }
+                                                @Override
+                                                public void onFailure(retrofit2.Call<JsonObject> call, Throwable t) {
+                                                    Toast.makeText(getApplication(), "FAILURE", Toast.LENGTH_LONG).show();
+                                                }
+                                            });
                                         }
                                     }
                                 }
