@@ -1,4 +1,4 @@
-package com.example.q.likealarmapplication.ProfileActivity;
+package com.example.q.likealarmapplication.IdealActivity;
 
 import android.content.Context;
 import android.content.Intent;
@@ -11,31 +11,32 @@ import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 
-import com.example.q.likealarmapplication.IdealActivity.IdealCreateActivity;
+import com.example.q.likealarmapplication.ProfileActivity.Model;
+import com.example.q.likealarmapplication.ProfileActivity.MultiViewTypeAdapter;
 import com.example.q.likealarmapplication.R;
 
 import java.util.ArrayList;
 
-public class ProfilecreateActivity extends AppCompatActivity {
+public class IdealCreateActivity extends AppCompatActivity {
+
 
     Context mContext;
     Boolean is_first = false;
-    MultiViewTypeAdapter mAdapter;
+    MultiViewTypeAdapter2 mAdapter;
 
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         mContext = this;
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_profilecreate);
+        setContentView(R.layout.activity_ideal_create);
 
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         getSupportActionBar().setHomeButtonEnabled(true);
-        getSupportActionBar().setTitle("프로필작성");
-
-        Intent i = getIntent();
-        Bundle extras = i.getExtras();
-        String name_got = extras.getString("username");
+        getSupportActionBar().setTitle("이상형작성");
+//        Intent i = getIntent();
+//        Bundle extras = i.getExtras();
+//        String name_got = extras.getString("username");
 //        String ingredient_got = extras.getString("ingredient");
 //        String category_got = extras.getString("category");
 //        String category_got2 = extras.getString("category2");
@@ -45,18 +46,18 @@ public class ProfilecreateActivity extends AppCompatActivity {
 //        ArrayList<String> recipes_got = extras.getStringArrayList("recipes");
 
         ArrayList<Model> list = new ArrayList();
-        list.add(new Model(Model.EDIT_NAME_TYPE, "이름", name_got, null, null));
+        //list.add(new Model(Model.EDIT_NAME_TYPE, "이름", name_got, null, null));
         list.add(new Model(Model.EDIT_SEX_TYPE, "성별", "", null, null));
         list.add(new Model(Model.EDIT_AGE_TYPE, "나이", "", null, null));
         list.add(new Model(Model.EDIT_HEIGHT_TYPE, "키", "", null, null));
         list.add(new Model(Model.EDIT_CHAR_TYPE, "성격", "", null, null));
         list.add(new Model(Model.EDIT_ALCOHOL_TYPE, "음주", "", null, null));
 
-        mAdapter = new MultiViewTypeAdapter(list, this);
+        mAdapter = new MultiViewTypeAdapter2(list, this);
 
         LinearLayoutManager linearLayoutManager = new LinearLayoutManager(this);
 
-        RecyclerView mRecyclerView = (RecyclerView) findViewById(R.id.recyclerView);
+        RecyclerView mRecyclerView = (RecyclerView) findViewById(R.id.recyclerView2);
         mRecyclerView.setLayoutManager(linearLayoutManager);
         mRecyclerView.setItemAnimator(new DefaultItemAnimator());
         mRecyclerView.setAdapter(mAdapter);
@@ -74,7 +75,6 @@ public class ProfilecreateActivity extends AppCompatActivity {
         MenuItem edit = menu.add(Menu.NONE, R.id.done, 10, "완료");
         edit.setShowAsAction(MenuItem.SHOW_AS_ACTION_ALWAYS);
 //        edit.setIcon(R.drawable.cloud);
-
         return true;
     }
 
@@ -85,8 +85,8 @@ public class ProfilecreateActivity extends AppCompatActivity {
                 onBackPressed();
                 return true;
             case R.id.done:
-                RecyclerView recyclerView = findViewById(R.id.recyclerView);
-                ((MultiViewTypeAdapter)recyclerView.getAdapter()).finishClick();
+                RecyclerView recyclerView = findViewById(R.id.recyclerView2);
+                ((MultiViewTypeAdapter2)recyclerView.getAdapter()).finishClick();
                 return true;
             default:
                 return super.onOptionsItemSelected(item);

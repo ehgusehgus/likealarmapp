@@ -20,6 +20,13 @@ public interface HttpInterface {
     @POST("/profile/create")
     Call<JsonObject> createProfile(@Field("facebook_id") String facebook_id, @Field("name") String name, @Field("sex") String sex, @Field("age") String age, @Field("height") String height,@Field("personal") String personal,@Field("alcohol") String alcohol);
 
+    @FormUrlEncoded
+    @POST("/ideal/create")
+    Call<JsonObject> createIdeal(@Field("facebook_id") String facebook_id, @Field("sex") String sex, @Field("age") String age, @Field("height") String height,@Field("personal") String personal,@Field("alcohol") String alcohol);
+
+    @GET("/ideal")
+    Call<JsonObject> getUserIdeal(@Header("facebook_id") String facebook_id);
+
     @GET("/profile")
     Call<JsonObject> getUserProfile(@Header("facebook_id") String facebook_id);
 

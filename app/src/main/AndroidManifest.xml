@@ -49,9 +49,15 @@
             android:exported="true" />
 
         <activity android:name=".ChatActivity.ChatActivity" />
-        <activity android:name=".ProfileActivity.ProfilecreateActivity"
-                android:theme="@style/Theme.AppCompat.Light.DarkActionBar">
-            <!-- Customize your theme here. -->></activity>
+        <activity
+            android:name=".ProfileActivity.ProfilecreateActivity"
+            android:theme="@style/Theme.AppCompat.Light.DarkActionBar">
+
+            <!-- Customize your theme here. -->
+            >
+        </activity>
+        <activity android:name=".IdealActivity.IdealCreateActivity"
+            android:theme="@style/Theme.AppCompat.Light.DarkActionBar"></activity>
     </application>
 
 </manifest>

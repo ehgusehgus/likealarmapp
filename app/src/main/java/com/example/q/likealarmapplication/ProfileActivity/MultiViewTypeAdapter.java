@@ -23,6 +23,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.q.likealarmapplication.HttpInterface;
+import com.example.q.likealarmapplication.IdealActivity.IdealCreateActivity;
 import com.example.q.likealarmapplication.R;
 import com.facebook.AccessToken;
 import com.google.gson.JsonArray;
@@ -241,7 +242,7 @@ public class MultiViewTypeAdapter extends RecyclerView.Adapter {
 
                     AlertDialog.Builder dialog = new AlertDialog.Builder(mContext);
                     dialog.setTitle("나이 선택");
-                    dialog.setMessage("Choose a value :");
+                    dialog.setMessage("얼마세요 :");
                     dialog.setView(numberPicker);
                     dialog.setPositiveButton("선택완료",
                                     new DialogInterface.OnClickListener() {
@@ -264,64 +265,84 @@ public class MultiViewTypeAdapter extends RecyclerView.Adapter {
                     ((ButtonTypeViewHolder) holder).btn.setOnClickListener(new View.OnClickListener() {
                         @Override
                         public void onClick(View view) {
+                            final NumberPicker numberPicker = new NumberPicker(mContext);
 
-                            final String[] items = new String[]{"155~160", "160~165", "165~170", "170~175", "175~180", "180~185", "185~190", "190~195", "195~200", "200이상"};
-                            final int[] selectedIndex = {0};
+
+                            numberPicker.setMaxValue(250);
+                            numberPicker.setMinValue(130);
 
                             AlertDialog.Builder dialog = new AlertDialog.Builder(mContext);
-                            dialog .setTitle("키 선택")
-                                    .setSingleChoiceItems(items, 0, new DialogInterface.OnClickListener() {
+                            dialog.setTitle("키 선택");
+                            dialog.setMessage("얼마세요 :");
+                            dialog.setView(numberPicker);
+                            dialog.setPositiveButton("선택완료",
+                                    new DialogInterface.OnClickListener() {
                                         @Override
                                         public void onClick(DialogInterface dialog, int which) {
-                                            selectedIndex[0] = which;
+                                            ((ButtonTypeViewHolder) holder).btn.setText(Integer.toString(numberPicker.getValue()));
                                         }
                                     })
+                                    .setNegativeButton("취소", null);
 
-                                    .setPositiveButton("선택", new DialogInterface.OnClickListener() {
-                                        @Override
-                                        public void onClick(DialogInterface dialog, int which) {
-                                            if(selectedIndex[0] == 0){
-                                                ((ButtonTypeViewHolder) holder).btn.setText(items[0]);
-                                                //mCategory = items[0];
-                                            }
-                                            if(selectedIndex[0] == 1){
-                                                ((ButtonTypeViewHolder) holder).btn.setText(items[1]);
-                                                //mCategory = items[1];
-                                            }
-                                            if(selectedIndex[0] == 2){
-                                                ((ButtonTypeViewHolder) holder).btn.setText(items[2]);
-                                                //mCategory = items[2];
-                                            }
-                                            if(selectedIndex[0] == 3){
-                                                ((ButtonTypeViewHolder) holder).btn.setText(items[3]);
-                                                //mCategory = items[3];
-                                            }
-                                            if(selectedIndex[0] == 4){
-                                                ((ButtonTypeViewHolder) holder).btn.setText(items[4]);
-                                                //mCategory = items[4];
-                                            }
-                                            if(selectedIndex[0] == 5){
-                                                ((ButtonTypeViewHolder) holder).btn.setText(items[5]);
-                                                //mCategory = items[4];
-                                            }
-                                            if(selectedIndex[0] == 6){
-                                                ((ButtonTypeViewHolder) holder).btn.setText(items[6]);
-                                                //mCategory = items[4];
-                                            }
-                                            if(selectedIndex[0] == 7){
-                                                ((ButtonTypeViewHolder) holder).btn.setText(items[7]);
-                                                //mCategory = items[4];
-                                            }
-                                            if(selectedIndex[0] == 8){
-                                                ((ButtonTypeViewHolder) holder).btn.setText(items[8]);
-                                                //mCategory = items[4];
-                                            }
-                                            if(selectedIndex[0] == 9){
-                                                ((ButtonTypeViewHolder) holder).btn.setText(items[9]);
-                                                //mCategory = items[4];
-                                            }
-                                        }
-                                    }).create().show();
+                            dialog.create();
+                            dialog.show();
+//                            final String[] items = new String[]{"155~160", "160~165", "165~170", "170~175", "175~180", "180~185", "185~190", "190~195", "195~200", "200이상"};
+//                            final int[] selectedIndex = {0};
+//
+//                            AlertDialog.Builder dialog = new AlertDialog.Builder(mContext);
+//                            dialog .setTitle("키 선택")
+//                                    .setSingleChoiceItems(items, 0, new DialogInterface.OnClickListener() {
+//                                        @Override
+//                                        public void onClick(DialogInterface dialog, int which) {
+//                                            selectedIndex[0] = which;
+//                                        }
+//                                    })
+//
+//                                    .setPositiveButton("선택", new DialogInterface.OnClickListener() {
+//                                        @Override
+//                                        public void onClick(DialogInterface dialog, int which) {
+//                                            if(selectedIndex[0] == 0){
+//                                                ((ButtonTypeViewHolder) holder).btn.setText(items[0]);
+//                                                //mCategory = items[0];
+//                                            }
+//                                            if(selectedIndex[0] == 1){
+//                                                ((ButtonTypeViewHolder) holder).btn.setText(items[1]);
+//                                                //mCategory = items[1];
+//                                            }
+//                                            if(selectedIndex[0] == 2){
+//                                                ((ButtonTypeViewHolder) holder).btn.setText(items[2]);
+//                                                //mCategory = items[2];
+//                                            }
+//                                            if(selectedIndex[0] == 3){
+//                                                ((ButtonTypeViewHolder) holder).btn.setText(items[3]);
+//                                                //mCategory = items[3];
+//                                            }
+//                                            if(selectedIndex[0] == 4){
+//                                                ((ButtonTypeViewHolder) holder).btn.setText(items[4]);
+//                                                //mCategory = items[4];
+//                                            }
+//                                            if(selectedIndex[0] == 5){
+//                                                ((ButtonTypeViewHolder) holder).btn.setText(items[5]);
+//                                                //mCategory = items[4];
+//                                            }
+//                                            if(selectedIndex[0] == 6){
+//                                                ((ButtonTypeViewHolder) holder).btn.setText(items[6]);
+//                                                //mCategory = items[4];
+//                                            }
+//                                            if(selectedIndex[0] == 7){
+//                                                ((ButtonTypeViewHolder) holder).btn.setText(items[7]);
+//                                                //mCategory = items[4];
+//                                            }
+//                                            if(selectedIndex[0] == 8){
+//                                                ((ButtonTypeViewHolder) holder).btn.setText(items[8]);
+//                                                //mCategory = items[4];
+//                                            }
+//                                            if(selectedIndex[0] == 9){
+//                                                ((ButtonTypeViewHolder) holder).btn.setText(items[9]);
+//                                                //mCategory = items[4];
+//                                            }
+//                                        }
+//                                    }).create().show();
                         }
                     });
                     break;
@@ -344,7 +365,10 @@ public class MultiViewTypeAdapter extends RecyclerView.Adapter {
                                                     String str = "";
                                                     for (int i = 0; i < checked.length; i++) {
                                                         if (checked[i]) {
-                                                            str = str + data[i] +",";
+                                                            if(str.length() ==0)
+                                                                str = str+data[i];
+                                                            else
+                                                                str =  str + ","+data[i] ;
                                                         }
                                                     }
                                                     ((ButtonTypeViewHolder) holder).btn.setText(str);
@@ -467,12 +491,10 @@ public class MultiViewTypeAdapter extends RecyclerView.Adapter {
             addPage.enqueue(new Callback<JsonObject>() {
                 @Override
                 public void onResponse(Call<JsonObject> call, Response<JsonObject> response) {
-//                    Intent intent = new Intent(getApplication(), ProfilecreateActivity.class);
-//                    intent.putExtra("username", text);
-//                    startActivity(intent);
+                    Intent intent = new Intent(mContext.getApplicationContext(), IdealCreateActivity.class);
+                    ((Activity) mContext).startActivity(intent);
                     ((Activity) mContext).finish();
                 }
-
                 @Override
                 public void onFailure(Call<JsonObject> call, Throwable t) {
                     Toast.makeText(mContext.getApplicationContext(), "FAILURE", Toast.LENGTH_LONG).show();
