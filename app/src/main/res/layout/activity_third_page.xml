@@ -7,11 +7,7 @@
     android:scrollbars="vertical"
     tools:context=".ThirdPageActivity.ThirdPageActivity">
 
-    <ScrollView
-        android:id="@+id/infobox"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        >
+
 
     <RelativeLayout
         android:id="@+id/rellay"
@@ -123,8 +119,6 @@
         android:layout_below="@+id/linlay"
         android:layout_width="match_parent"
         android:layout_height="match_parent">
-
-
 
 
             <LinearLayout
@@ -289,10 +283,25 @@
 
             </LinearLayout>
 
+        <com.facebook.login.widget.LoginButton
+            android:id="@+id/login_button"
+            android:layout_width="122dp"
+            android:layout_height="23dp"
+            android:layout_alignParentBottom="true"
+            android:layout_alignParentEnd="true"
+            android:layout_gravity="right"
+            android:layout_marginBottom="19dp"
+            android:layout_marginEnd="11dp"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintVertical_bias="0.735" />
+
 
 
     </RelativeLayout>
 
-</ScrollView>
+
 
 </RelativeLayout>
