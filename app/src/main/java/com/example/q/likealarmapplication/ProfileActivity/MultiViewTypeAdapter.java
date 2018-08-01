@@ -198,7 +198,7 @@ public class MultiViewTypeAdapter extends RecyclerView.Adapter {
                         @Override
                         public void onClick(View view) {
 
-                            final String[] items = new String[]{"남자", "여성"};
+                            final String[] items = new String[]{"남성", "여성"};
                             final int[] selectedIndex = {0};
 
                             AlertDialog.Builder dialog = new AlertDialog.Builder(mContext);

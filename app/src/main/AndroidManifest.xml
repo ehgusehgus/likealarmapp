@@ -39,7 +39,11 @@
         <activity android:name=".FirstPageActivity.FirstPageActivity" />
         <activity
             android:name=".SecondPageActivity.SecondPageActivity"
-            android:theme="@style/Theme.AppCompat.NoActionBar" />
+            android:theme="@style/Theme.AppCompat.NoActionBar">
+            <intent-filter>
+                <action android:name="android.intent.action.BROADCAST" />
+            </intent-filter>
+        </activity>
         <activity android:name=".UserActivity.UserCreateActivity" />
         <activity android:name=".ThirdPageActivity.ThirdPageActivity" />
 

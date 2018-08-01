@@ -2,8 +2,12 @@ package com.example.q.likealarmapplication.SecondPageActivity;
 
 import android.Manifest;
 import android.annotation.TargetApi;
+import android.app.Activity;
 import android.app.FragmentManager;
+import android.content.BroadcastReceiver;
 import android.content.Context;
+import android.content.Intent;
+import android.content.IntentFilter;
 import android.content.pm.PackageManager;
 import android.graphics.Color;
 import android.location.Location;
@@ -19,6 +23,7 @@ import android.view.View;
 import android.widget.TextView;
 import android.widget.ToggleButton;
 
+import com.example.q.likealarmapplication.MainActivity;
 import com.example.q.likealarmapplication.R;
 import com.facebook.internal.WebDialog;
 import com.google.android.gms.location.LocationRequest;
@@ -28,6 +33,7 @@ import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.MapFragment;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
+import com.google.android.gms.maps.model.Circle;
 import com.google.android.gms.maps.model.CircleOptions;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MarkerOptions;
@@ -42,12 +48,69 @@ public class SecondPageActivity extends AppCompatActivity implements OnMapReadyC
     double latitude;
     float accuracy;
     Boolean is_checked= false;
+    Boolean is_near = false;
+
+    public static final String BROADCAST_ACTION="com.truiton.broadcast.string";
+
+    MyBroadCastReceiver myBroadCastReceiver;
+    class MyBroadCastReceiver extends BroadcastReceiver
+    {
+
+        @Override
+        public void onReceive(Context context, Intent intent) {
+
+            try
+            {
+                // uncomment this line if you had sent some data
+                Bundle extras = intent.getExtras();
+                Boolean data = extras.getBoolean("bool"); // data is a key specified to intent while sending broadcast
+                Log.d("!!!!", data+"");
+//                Log.e(TAG, "data=="+data);
+                is_near = data;
+            }
+            catch (Exception ex)
+            {
+                Log.d("!!!!", ex+"");
+                ex.printStackTrace();
+            }
+        }
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+
+        // make sure to unregister your receiver after finishing of this activity
+        unregisterReceiver(myBroadCastReceiver);
+    }
+
+    private void registerMyReceiver() {
+        try
+        {
+            IntentFilter intentFilter = new IntentFilter();
+            intentFilter.addAction(BROADCAST_ACTION);
+            registerReceiver(myBroadCastReceiver, intentFilter);
+        }
+        catch (Exception ex)
+        {
+            ex.printStackTrace();
+        }
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        IntentFilter filter = new IntentFilter();
+        registerMyReceiver();
+    }
 
     @TargetApi(26)
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_second_page);
+
+        registerMyReceiver();
 
         FragmentManager fragmentManager = getFragmentManager();
         MapFragment mapFragment = (MapFragment) fragmentManager.findFragmentById(R.id.map);
@@ -169,7 +232,7 @@ public class SecondPageActivity extends AppCompatActivity implements OnMapReadyC
 //        map.moveCamera(CameraUpdateFactory.newLatLng(myPlace));
 //        map.animateCamera(CameraUpdateFactory.zoomTo(10));
 
-
+    @TargetApi(26)
     public void onAddMarker(){
         LatLng position = new LatLng(latitude , longitude);
 
@@ -177,11 +240,21 @@ public class SecondPageActivity extends AppCompatActivity implements OnMapReadyC
         MarkerOptions mymarker = new MarkerOptions()
                 .position(position);   //마커위치
 
+        CircleOptions circle1KM;
+
         // 반경 1KM원
-        CircleOptions circle1KM = new CircleOptions().center(position) //원점
-                .radius(100)      //반지름 단위 : m
-                .fillColor(0x220000FF)
-                .strokeWidth(0f);
+        if(is_near) {
+            circle1KM = new CircleOptions().center(position) //원점
+                    .radius(100)      //반지름 단위 : m
+                    .fillColor(0x220000FF)
+                    .strokeWidth(0f);
+        }
+        else{
+            circle1KM = new CircleOptions().center(position) //원점
+                    .radius(100)      //반지름 단위 : m
+                    .fillColor(0x220000FF)
+                    .strokeWidth(0f);
+        }
 
         //마커추가
         this.mMap.addMarker(mymarker);
@@ -189,7 +262,5 @@ public class SecondPageActivity extends AppCompatActivity implements OnMapReadyC
         //원추가
         this.mMap.addCircle(circle1KM);
     }
-
-
 
 }

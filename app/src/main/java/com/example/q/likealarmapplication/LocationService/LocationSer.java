@@ -18,14 +18,17 @@ import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.IBinder;
+import android.os.StrictMode;
 import android.support.v4.app.ActivityCompat;
 import android.util.Log;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.q.likealarmapplication.HttpInterface;
 import com.example.q.likealarmapplication.MainActivity;
 import com.example.q.likealarmapplication.MyApplication;
 import com.example.q.likealarmapplication.R;
+import com.example.q.likealarmapplication.SecondPageActivity.SecondPageActivity;
 import com.example.q.likealarmapplication.UserActivity.UserCreateActivity;
 import com.facebook.AccessToken;
 import com.google.gson.JsonObject;
@@ -35,10 +38,12 @@ import org.json.JSONObject;
 
 import java.net.URISyntaxException;
 import java.util.ArrayList;
+import java.util.StringTokenizer;
 
 import io.socket.client.IO;
 import io.socket.client.Socket;
 import io.socket.emitter.Emitter;
+import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 import retrofit2.Retrofit;
@@ -184,7 +189,6 @@ public class LocationSer extends Service {
         mNotificationManager.cancel(777);
         mNotificationManager.cancel(778);
         mNotificationManager.cancel(779);
-
     }
 
     class myServiceHandler extends Handler {
@@ -203,10 +207,7 @@ public class LocationSer extends Service {
                         1, // 통지사이의 최소 변경거리 (m)
                         mLocationListener);
             } catch (SecurityException ex) {
-
             }
-            Toast.makeText(LocationSer.this, "뜸?", Toast.LENGTH_LONG).show();
-
         }
     }
 
@@ -254,9 +255,12 @@ public class LocationSer extends Service {
             }catch(JSONException e){
             }
 
+
             final String facebook2 = facebook_id;
             Log.d("?????",mLocation.distanceTo(getLoc)+"");
-            if(mLocation.distanceTo(getLoc)<=50){
+            if(mLocation.distanceTo(getLoc)<=100){
+
+                sendMyBroadCast(true);
 
                 NotificationManager mNotificationManager =
                         getSystemService(NotificationManager.class);
@@ -272,8 +276,6 @@ public class LocationSer extends Service {
                 mChannel.enableVibration(true);
                 mNotificationManager.createNotificationChannel(mChannel);
 
-                Log.d("????", MyApplication.is_love+"  "+MyApplication.is_boring);
-
                 retrofit2.Call<JsonObject> getUserCall = httpInterface.getUser(facebook_id);
                 getUserCall.enqueue(new Callback<JsonObject>() {
                     @Override
@@ -281,32 +283,35 @@ public class LocationSer extends Service {
                         JsonObject object = response.body().get("result").getAsJsonObject();
                         if(MyApplication.is_love && object.get("is_love").getAsInt() == 1 && !MyApplication.is_loving){
 
-                            if(!NearUser_love.contains(facebook2))
-                                NearUser_love.add(facebook2);
+                            if(MatchIdealUsers(accessToken.getUserId(), facebook2) && MatchIdealUsers(facebook2,accessToken.getUserId())) {
 
-                            Intent intent = new Intent(LocationSer.this, MainActivity.class);
-                            intent.putExtra("from_notification", true);
-                            intent.putExtra("is_loving", true);
-                            intent.putExtra("facebook_id", facebook2);
-                            final PendingIntent pendingIntent = PendingIntent.getActivity(LocationSer.this, 0, intent,PendingIntent.FLAG_UPDATE_CURRENT);
+                                if (!NearUser_love.contains(facebook2))
+                                    NearUser_love.add(facebook2);
 
-                            Notifi = new Notification.Builder(getApplicationContext())
-                                    .setContentTitle("연애")
-                                    .setContentText("Content Text")
-                                    .setSmallIcon(R.drawable.heart)
-                                    .setTicker("알림!!!")
-                                    .setContentIntent(pendingIntent)
-                                    .setChannelId("my_channel_01")
-                                    .setVibrate(new long[]{1000, 1000})
-                                    .build();
-                            //소리추가
-                            Notifi.defaults |= Notification.DEFAULT_SOUND;
-                            //알림 소리를 한번만 내도록
-                            Notifi.flags |= Notification.FLAG_ONLY_ALERT_ONCE;
-                            //확인하면 자동으로 알림이 제거 되도록
-                            Notifi.flags |= Notification.FLAG_AUTO_CANCEL;
-                            Notifi_M.notify( 777 , Notifi);
-                            //토스트 띄우기
+                                Intent intent = new Intent(LocationSer.this, MainActivity.class);
+                                intent.putExtra("from_notification", true);
+                                intent.putExtra("is_loving", true);
+                                intent.putExtra("facebook_id", facebook2);
+                                final PendingIntent pendingIntent = PendingIntent.getActivity(LocationSer.this, 0, intent, PendingIntent.FLAG_UPDATE_CURRENT);
+
+                                Notifi = new Notification.Builder(getApplicationContext())
+                                        .setContentTitle("연애")
+                                        .setContentText("Content Text")
+                                        .setSmallIcon(R.drawable.heart)
+                                        .setTicker("알림!!!")
+                                        .setContentIntent(pendingIntent)
+                                        .setChannelId("my_channel_01")
+                                        .setVibrate(new long[]{1000, 1000})
+                                        .build();
+                                //소리추가
+                                Notifi.defaults |= Notification.DEFAULT_SOUND;
+                                //알림 소리를 한번만 내도록
+                                Notifi.flags |= Notification.FLAG_ONLY_ALERT_ONCE;
+                                //확인하면 자동으로 알림이 제거 되도록
+                                Notifi.flags |= Notification.FLAG_AUTO_CANCEL;
+                                Notifi_M.notify(777, Notifi);
+                                //토스트 띄우기
+                            }
                         }
                         if(MyApplication.is_boring && (object.get("is_boring").getAsInt() == 1 && !MyApplication.is_boringing)){
 
@@ -398,11 +403,143 @@ public class LocationSer extends Service {
                     mNotificationManager.cancel(778);
                 if(NearUser_need.size() == 0)
                     mNotificationManager.cancel(779);
-                
+                if(NearUser_love.size() == 0 && NearUser_boring.size() == 0 && NearUser_need.size() == 0)
+                    sendMyBroadCast(false);
             }
         }
     };
 
+    public boolean MatchIdealUsers(String facebook_mine, final String facebook_other){
 
+        Call<JsonObject> call = httpInterface.getUserProfile(facebook_mine);
+        JsonObject mine= null;
+
+        StrictMode.ThreadPolicy policy = new StrictMode.ThreadPolicy.Builder().permitAll().build();
+
+        StrictMode.setThreadPolicy(policy);
+        try {
+
+            mine = call.execute().body().get("result").getAsJsonObject();
+            //mine = getUserProfile.execute().body().get("result").getAsJsonObject();
+        }catch (Exception e){
+            Log.d("???", e+"");
+            return false;
+        }
+//        mine = mine_2.get("result").getAsJsonObject();
+
+        final String myname = mine.get("name").getAsString();
+        final String mysex = mine.get("sex").getAsString();
+        final String myage = mine.get("age").getAsString();
+        final String myheight = mine.get("height").getAsString();
+        String mypersonal = mine.get("personal").getAsString();
+        ArrayList<String> mypersonallist= new ArrayList<String>();
+        StringTokenizer s = new StringTokenizer(mypersonal);
+        while(s.hasMoreTokens()) {
+            mypersonallist.add(s.nextToken(","));
+        }
+        final String myalcohol = mine.get("alcohol").getAsString();
+
+
+        retrofit2.Call<JsonObject> getUserIdeal = httpInterface.getUserIdeal(facebook_other);
+        JsonObject your_a;
+        JsonObject your;
+        try {
+            your = getUserIdeal.execute().body().get("result").getAsJsonObject();
+
+        }catch (Exception e){
+
+            return false;
+        }
+//        your = your_a.get("result").getAsJsonObject();
+
+        String yoursex = your.get("sex").getAsString();
+        ArrayList<String> yoursexlist= new ArrayList<String>();
+        StringTokenizer s0 = new StringTokenizer(yoursex);
+        while(s0.hasMoreTokens()) {
+            yoursexlist.add(s0.nextToken(","));
+        }
+
+        String yourage = your.get("age").getAsString();
+        ArrayList<String> youragelist= new ArrayList<String>();
+        StringTokenizer s2 = new StringTokenizer(yourage);
+        Log.d("?????", yourage);
+        while(s2.hasMoreTokens()) {
+
+            youragelist.add(s2.nextToken("~"));
+        }
+
+        String yourheight = your.get("height").getAsString();
+
+        ArrayList<String> yourheightlist= new ArrayList<String>();
+        StringTokenizer s3 = new StringTokenizer(yourheight);
+        while(s3.hasMoreTokens()) {
+            yourheightlist.add(s3.nextToken("~"));
+        }
+
+        String yourpersonal = your.get("personal").getAsString();
+
+        ArrayList<String> yourpersoanllist= new ArrayList<String>();
+        StringTokenizer s4 = new StringTokenizer(yourpersonal);
+        while(s4.hasMoreTokens()) {
+            yourpersoanllist.add(s4.nextToken("~"));
+        }
+
+        String youralcohol = your.get("alcohol").getAsString();
+        ArrayList<String> youralcohollist= new ArrayList<String>();
+        StringTokenizer s5 = new StringTokenizer(youralcohol);
+        while(s5.hasMoreTokens()) {
+            youralcohollist.add(s5.nextToken("~"));
+
+        }
+
+        if(yoursexlist.indexOf(mysex) == -1){
+            Log.d("???", yoursexlist.toString());
+            Log.d("???", "sex");
+            return false;
+        }
+        if(!(Integer.parseInt(youragelist.get(0)) <=Integer.parseInt(myage) && Integer.parseInt(youragelist.get(1)) >=Integer.parseInt(myage))){
+            Log.d("???", "age");
+            return false;
+        }
+        if(!(Integer.parseInt(yourheightlist.get(0)) <=Integer.parseInt(myheight) && Integer.parseInt(yourheightlist.get(1)) >=Integer.parseInt(myheight))){
+            Log.d("???", "height");
+            return false;
+        }
+
+        if(yourpersoanllist.indexOf("상관없음") == -1) {
+            int a=0;
+            for(int i=0; i<mypersonallist.size(); i++) {
+                if (yourpersoanllist.indexOf(mypersonallist.get(i)) != -1) {
+                    a=a+1;
+                }
+            }
+            if(a==0) {
+                Log.d("???", "persoanl");
+                return false;
+            }
+        }
+        if(youralcohollist.indexOf("상관없음") == -1) {
+            if (youralcohollist.indexOf(myalcohol) == -1) {
+                return false;
+            }
+        }
+        return true;
+    }
+
+    private void sendMyBroadCast(Boolean a)
+    {
+        try
+        {
+            Intent broadCastIntent = new Intent();
+            broadCastIntent.putExtra("bool", a);
+            broadCastIntent.setAction(SecondPageActivity.BROADCAST_ACTION);
+            sendBroadcast(broadCastIntent);
+            Log.d("!!!!", "send");
+        }
+        catch (Exception ex)
+        {
+            ex.printStackTrace();
+        }
+    }
 }
 

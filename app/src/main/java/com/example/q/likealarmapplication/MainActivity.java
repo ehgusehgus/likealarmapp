@@ -28,6 +28,8 @@ import com.example.q.likealarmapplication.UserActivity.UserCreateActivity;
 import com.facebook.AccessToken;
 import com.google.gson.JsonObject;
 
+import java.util.ArrayList;
+
 import retrofit2.Callback;
 import retrofit2.Response;
 import retrofit2.Retrofit;
@@ -47,6 +49,7 @@ public class MainActivity extends TabActivity {
     String Username="";
     private Socket mSocket;
     private Boolean from_notification = false;
+    Boolean is_near = false;
 
 
     @Override
@@ -83,7 +86,6 @@ public class MainActivity extends TabActivity {
             return;
         }
 
-        Log.d("????","?????");
         //nickname
         if (MyApplication.nickname.equals("")) {
             retrofit2.Call<JsonObject> getUserCall = httpInterface.getUser(accessToken.getUserId());
@@ -373,6 +375,10 @@ public class MainActivity extends TabActivity {
         tabhost.getTabWidget().setCurrentTab(0);
 //        tabhost.getTabWidget().getChildAt(tabhost.getCurrentTab())
 //                .setBackgroundResource(R.drawable.round_tab_white); // selected
+    }
+
+    public boolean getisnear(){
+        return this.is_near;
     }
 
 //    private Emitter.Listener onConnect = new Emitter.Listener() {
