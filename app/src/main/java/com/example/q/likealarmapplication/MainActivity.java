@@ -14,10 +14,12 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.TabHost;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.q.likealarmapplication.ChatActivity.ChatActivity;
 import com.example.q.likealarmapplication.FirstPageActivity.FirstPageActivity;
+import com.example.q.likealarmapplication.ProfileActivity.ProfilecreateActivity;
 import com.example.q.likealarmapplication.SecondPageActivity.SecondPageActivity;
 import com.example.q.likealarmapplication.ThirdPageActivity.ThirdPageActivity;
 import com.example.q.likealarmapplication.UserActivity.LoginActivity;
@@ -93,11 +95,30 @@ public class MainActivity extends TabActivity {
                             Intent intent = new Intent(getApplication(), UserCreateActivity.class);
                             startActivity(intent);
                         } else {
-
                             Username = object.get("name").toString();
                             MyApplication.setIs_love(object.get("is_love").getAsInt() == 1);
                             MyApplication.setIs_boring(object.get("is_boring").getAsInt() == 1);
                             MyApplication.setIs_needs(object.get("is_need").getAsInt() == 1);
+
+                            retrofit2.Call<JsonObject> getUserProfile = httpInterface.getUserProfile(accessToken.getUserId());
+                            getUserProfile.enqueue(new Callback<JsonObject>() {
+                                @Override
+                                public void onResponse(retrofit2.Call<JsonObject> call, Response<JsonObject> response) {
+                                    JsonObject object = response.body().get("result").getAsJsonObject();
+                                    if (object != null) {
+                                        if (object.get("name") == null) {
+                                            Intent intent = new Intent(getApplication(), ProfilecreateActivity.class);
+                                            intent.putExtra("username", MyApplication.nickname);
+                                            startActivity(intent);
+                                        } else {
+                                        }
+                                    }
+                                }
+                                @Override
+                                public void onFailure(retrofit2.Call<JsonObject> call, Throwable t) {
+                                    Toast.makeText(getApplication(), "FAILURE", Toast.LENGTH_LONG).show();
+                                }
+                            });
                         }
                     }
 
@@ -129,15 +150,53 @@ public class MainActivity extends TabActivity {
                 }
             });
         } else {
-            if (!hasPermissions(mContext, PERMISSIONS)) {
-                ActivityCompat.requestPermissions((Activity) mContext,
-                        PERMISSIONS,
-                        0);
-            } else {
-                doOncreate();
-            }
+            retrofit2.Call<JsonObject> getUserProfile = httpInterface.getUserProfile(accessToken.getUserId());
+            getUserProfile.enqueue(new Callback<JsonObject>() {
+                @Override
+                public void onResponse(retrofit2.Call<JsonObject> call, Response<JsonObject> response) {
+                    JsonObject object = response.body().get("result").getAsJsonObject();
+                    if (object != null) {
+                        if (object.get("name") == null) {
+                            Intent intent = new Intent(getApplication(), ProfilecreateActivity.class);
+                            intent.putExtra("username", MyApplication.nickname);
+                            startActivity(intent);
+                        } else {
+                        }
+                    }
+                    if (!hasPermissions(mContext, PERMISSIONS)) {
+                        ActivityCompat.requestPermissions((Activity) mContext,
+                                PERMISSIONS,
+                                0);
+                    } else {
+                        doOncreate();
+                    }
 
-            doOncreate();
+                    doOncreate();
+                }
+                @Override
+                public void onFailure(retrofit2.Call<JsonObject> call, Throwable t) {
+                    Toast.makeText(getApplication(), "FAILURE", Toast.LENGTH_LONG).show();
+
+                    if (!hasPermissions(mContext, PERMISSIONS)) {
+                        ActivityCompat.requestPermissions((Activity) mContext,
+                                PERMISSIONS,
+                                0);
+                    } else {
+                        doOncreate();
+                    }
+                    doOncreate();
+                }
+            });
+
+//            if (!hasPermissions(mContext, PERMISSIONS)) {
+//                ActivityCompat.requestPermissions((Activity) mContext,
+//                        PERMISSIONS,
+//                        0);
+//            } else {
+//                doOncreate();
+//            }
+//
+//            doOncreate();
         }
 
         String facebook_id ="";
@@ -159,6 +218,14 @@ public class MainActivity extends TabActivity {
         if(from_notification){
             LayoutInflater li = LayoutInflater.from(mContext);
             View promptsView = li.inflate(R.layout.prompts, null);
+            TextView tv = promptsView.findViewById(R.id.textView1);
+            if(MyApplication.is_loving)
+                tv.setText("이상형이 근처에있습니다");
+            if(MyApplication.is_boringing)
+                tv.setText("심심한 사람이 근처에 있습니다");
+            if(MyApplication.is_needing)
+                tv.setText("필요한 사람이 근처에 있습니다");
+
             final AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(
                     mContext);
 

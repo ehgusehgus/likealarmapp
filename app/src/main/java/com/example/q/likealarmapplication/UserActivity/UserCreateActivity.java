@@ -55,6 +55,7 @@ public class UserCreateActivity extends AppCompatActivity{
                         if(object != null){
                             MyApplication.setNickname(text);
                             Intent intent = new Intent(getApplication(), ProfilecreateActivity.class);
+                            intent.putExtra("username", text);
                             startActivity(intent);
                             finish();
                         } else {

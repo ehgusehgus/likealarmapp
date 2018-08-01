@@ -3,9 +3,13 @@ package com.example.q.likealarmapplication.ProfileActivity;
 import android.app.Activity;
 import android.content.Context;
 import android.content.DialogInterface;
+import android.content.Intent;
+import android.graphics.Bitmap;
+import android.graphics.drawable.BitmapDrawable;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.CardView;
 import android.support.v7.widget.RecyclerView;
+import android.util.Base64;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -14,15 +18,18 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.ListView;
+import android.widget.NumberPicker;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.example.q.likealarmapplication.HttpInterface;
 import com.example.q.likealarmapplication.R;
 import com.facebook.AccessToken;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonIOException;
 import com.google.gson.JsonObject;
 
+import java.io.ByteArrayOutputStream;
 import java.net.URLEncoder;
 import java.util.ArrayList;
 
@@ -44,6 +51,17 @@ public class MultiViewTypeAdapter extends RecyclerView.Adapter {
 
     private ListView mListView;
     private TextView mTextView;
+    AccessToken accessToken;
+    Retrofit retrofit;
+    HttpInterface httpInterface;
+    TextTypeViewHolder mName ;
+    ButtonTypeViewHolder mSex;
+
+    ButtonTypeViewHolder mHeight;
+    ButtonTypeViewHolder mChar;
+    ButtonTypeViewHolder mAge;
+    ButtonTypeViewHolder mAlcohol;
+
 
     TextView mRecipe;
 
@@ -115,22 +133,28 @@ public class MultiViewTypeAdapter extends RecyclerView.Adapter {
         switch (viewType) {
             case Model.EDIT_NAME_TYPE:
                 view = LayoutInflater.from(parent.getContext()).inflate(R.layout.search_text, parent, false);
-                return new TextTypeViewHolder(view);
+                mName = new TextTypeViewHolder(view);
+                return mName;
             case Model.EDIT_SEX_TYPE:
                 view = LayoutInflater.from(parent.getContext()).inflate(R.layout.button_type, parent, false);
-                return new ButtonTypeViewHolder(view);
+                mSex = new ButtonTypeViewHolder(view);
+                return mSex;
             case Model.EDIT_AGE_TYPE:
-                view = LayoutInflater.from(parent.getContext()).inflate(R.layout.text_type, parent, false);
-                return new TextTypeViewHolder2(view);
+                view = LayoutInflater.from(parent.getContext()).inflate(R.layout.button_type, parent, false);
+                mAge = new ButtonTypeViewHolder(view);
+                return mAge;
             case Model.EDIT_HEIGHT_TYPE:
                 view = LayoutInflater.from(parent.getContext()).inflate(R.layout.button_type, parent, false);
-                return new ButtonTypeViewHolder(view);
+                mHeight = new ButtonTypeViewHolder(view);
+                return mHeight;
             case Model.EDIT_CHAR_TYPE:
                 view = LayoutInflater.from(parent.getContext()).inflate(R.layout.button_type, parent, false);
-                return new ButtonTypeViewHolder(view);
+                mChar = new ButtonTypeViewHolder(view);
+                return mChar;
             case Model.EDIT_ALCOHOL_TYPE:
                 view = LayoutInflater.from(parent.getContext()).inflate(R.layout.button_type, parent, false);
-                return new ButtonTypeViewHolder(view);
+                mAlcohol = new ButtonTypeViewHolder(view);
+                return mAlcohol;
         }
         return null;
     }
@@ -203,7 +227,37 @@ public class MultiViewTypeAdapter extends RecyclerView.Adapter {
                     break;
 
                 case Model.EDIT_AGE_TYPE:
-                    ((TextTypeViewHolder2) holder).txtType.setText(object.text);
+
+                    ((ButtonTypeViewHolder) holder).txtType.setText(object.text);
+                    ((ButtonTypeViewHolder) holder).btn.setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View view) {
+
+                    final NumberPicker numberPicker = new NumberPicker(mContext);
+
+
+                    numberPicker.setMaxValue(120);
+                    numberPicker.setMinValue(15);
+
+                    AlertDialog.Builder dialog = new AlertDialog.Builder(mContext);
+                    dialog.setTitle("나이 선택");
+                    dialog.setMessage("Choose a value :");
+                    dialog.setView(numberPicker);
+                    dialog.setPositiveButton("선택완료",
+                                    new DialogInterface.OnClickListener() {
+                                        @Override
+                                        public void onClick(DialogInterface dialog, int which) {
+                                            ((ButtonTypeViewHolder) holder).btn.setText(Integer.toString(numberPicker.getValue()));
+                                        }
+                                    })
+                                    .setNegativeButton("취소", null);
+
+                    dialog.create();
+                    dialog.show();
+            }
+                    });
+
+
                     break;
                 case Model.EDIT_HEIGHT_TYPE:
                     ((ButtonTypeViewHolder) holder).txtType.setText(object.text);
@@ -215,7 +269,7 @@ public class MultiViewTypeAdapter extends RecyclerView.Adapter {
                             final int[] selectedIndex = {0};
 
                             AlertDialog.Builder dialog = new AlertDialog.Builder(mContext);
-                            dialog .setTitle("Choose Category")
+                            dialog .setTitle("키 선택")
                                     .setSingleChoiceItems(items, 0, new DialogInterface.OnClickListener() {
                                         @Override
                                         public void onClick(DialogInterface dialog, int which) {
@@ -223,7 +277,7 @@ public class MultiViewTypeAdapter extends RecyclerView.Adapter {
                                         }
                                     })
 
-                                    .setPositiveButton("apply", new DialogInterface.OnClickListener() {
+                                    .setPositiveButton("선택", new DialogInterface.OnClickListener() {
                                         @Override
                                         public void onClick(DialogInterface dialog, int which) {
                                             if(selectedIndex[0] == 0){
@@ -282,7 +336,7 @@ public class MultiViewTypeAdapter extends RecyclerView.Adapter {
 
                             final String data []   = {"지적인","차분한","유머있는","내향적인","외향적인","감성적인","상냥한","귀여운","열정적인","듬직한","개성있는"};
                             final boolean checked[]= {false,  false, false,  false,false,  false,false,  false,false,  false,false};
-                            builder.setTitle("MuiltiChoice 다이얼로그 제목")
+                            builder.setTitle("성격")
                                     .setPositiveButton("선택완료",
                                             new DialogInterface.OnClickListener() {
                                                 @Override
@@ -290,7 +344,7 @@ public class MultiViewTypeAdapter extends RecyclerView.Adapter {
                                                     String str = "";
                                                     for (int i = 0; i < checked.length; i++) {
                                                         if (checked[i]) {
-                                                            str = str + data[i] +", ";
+                                                            str = str + data[i] +",";
                                                         }
                                                     }
                                                     ((ButtonTypeViewHolder) holder).btn.setText(str);
@@ -322,7 +376,7 @@ public class MultiViewTypeAdapter extends RecyclerView.Adapter {
                             final int[] selectedIndex = {0};
 
                             AlertDialog.Builder dialog = new AlertDialog.Builder(mContext);
-                            dialog .setTitle("Choose Category")
+                            dialog .setTitle("음주")
                                     .setSingleChoiceItems(items, 0, new DialogInterface.OnClickListener() {
                                         @Override
                                         public void onClick(DialogInterface dialog, int which) {
@@ -330,7 +384,7 @@ public class MultiViewTypeAdapter extends RecyclerView.Adapter {
                                         }
                                     })
 
-                                    .setPositiveButton("apply", new DialogInterface.OnClickListener() {
+                                    .setPositiveButton("선택", new DialogInterface.OnClickListener() {
                                         @Override
                                         public void onClick(DialogInterface dialog, int which) {
                                             if(selectedIndex[0] == 0){
@@ -364,4 +418,65 @@ public class MultiViewTypeAdapter extends RecyclerView.Adapter {
         return dataSet.size();
     }
 
-}
+    public void finishClick() {
+
+        retrofit = new Retrofit.Builder().addConverterFactory(GsonConverterFactory.create())
+                .baseUrl(HttpInterface.BaseURL)
+                .build();
+        httpInterface = retrofit.create(HttpInterface.class);
+
+        String name = mName.txtType2.getText().toString();
+        if(name.equals("")){
+            Toast.makeText(mContext.getApplicationContext(), "이름 적으세용!!", Toast.LENGTH_LONG).show();
+            return;
+        }
+
+        String sex = mSex.btn.getText().toString();
+        if(sex.equals("Select")){
+            Toast.makeText(mContext.getApplicationContext(), "성별 고르세용!!", Toast.LENGTH_LONG).show();
+            return;
+        }
+        String age = mAge.btn.getText().toString();
+        if(age.equals("")){
+            Toast.makeText(mContext.getApplicationContext(), "나이 적으세용!!", Toast.LENGTH_LONG).show();
+            return;
+        }
+        String height = mHeight.btn.getText().toString();
+        if(height.equals("Select")){
+            Toast.makeText(mContext.getApplicationContext(), "키 고르세용!!", Toast.LENGTH_LONG).show();
+            return;
+        }
+        String personal= mChar.btn.getText().toString();
+        if(personal.equals("Select")){
+            Toast.makeText(mContext.getApplicationContext(), "성격 고르세용!!", Toast.LENGTH_LONG).show();
+            return;
+        }
+        String alcohol= mAlcohol.btn.getText().toString();
+        if(alcohol.equals("Select")){
+            Toast.makeText(mContext.getApplicationContext(), "음주 선택!!", Toast.LENGTH_LONG).show();
+            return;
+        }
+
+        Retrofit retrofit = new Retrofit.Builder().addConverterFactory(GsonConverterFactory.create())
+                .baseUrl(HttpInterface.BaseURL)
+                .build();
+        HttpInterface httpInterface = retrofit.create(HttpInterface.class);
+
+        AccessToken a = AccessToken.getCurrentAccessToken();
+            Call<JsonObject> addPage = httpInterface.createProfile(a.getUserId(), name, sex, age, height, personal, alcohol);
+            addPage.enqueue(new Callback<JsonObject>() {
+                @Override
+                public void onResponse(Call<JsonObject> call, Response<JsonObject> response) {
+//                    Intent intent = new Intent(getApplication(), ProfilecreateActivity.class);
+//                    intent.putExtra("username", text);
+//                    startActivity(intent);
+                    ((Activity) mContext).finish();
+                }
+
+                @Override
+                public void onFailure(Call<JsonObject> call, Throwable t) {
+                    Toast.makeText(mContext.getApplicationContext(), "FAILURE", Toast.LENGTH_LONG).show();
+                }
+            });
+        }
+    }
