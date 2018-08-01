@@ -426,8 +426,13 @@ public class LocationSer extends Service {
             return false;
         }
 //        mine = mine_2.get("result").getAsJsonObject();
-        if(mine ==null)
-            return false;
+        try{
+            if(mine.get("messages").getAsString().equals("None"))
+                return false;
+        }
+        catch(Exception e){
+
+        }
 
         final String myname = mine.get("name").getAsString();
         final String mysex = mine.get("sex").getAsString();
@@ -448,15 +453,19 @@ public class LocationSer extends Service {
         JsonObject your;
         try {
             your = getUserIdeal.execute().body().get("result").getAsJsonObject();
-
         }catch (Exception e){
-
             return false;
         }
 //        your = your_a.get("result").getAsJsonObject();
 
-        if(your ==null)
-            return false;
+        try{
+            if(your.get("messages").getAsString().equals("None"))
+                return false;
+        }
+        catch(Exception e){
+
+        }
+
 
         String yoursex = your.get("sex").getAsString();
         ArrayList<String> yoursexlist= new ArrayList<String>();

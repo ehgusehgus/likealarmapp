@@ -65,7 +65,8 @@
             android:theme="@style/Theme.AppCompat.Light.DarkActionBar" />
         <activity android:name=".ThirdPageActivity.ThirdPAgeActivity2" />
         <activity android:name=".ThirdPageActivity.ProfileAppear" />
-        <activity android:name=".ThirdPageActivity.IdealAppear"></activity>
+        <activity android:name=".ThirdPageActivity.IdealAppear" />
+        <activity android:name=".NeedActivity.Needcreateactivity"></activity>
     </application>
 
 </manifest>
