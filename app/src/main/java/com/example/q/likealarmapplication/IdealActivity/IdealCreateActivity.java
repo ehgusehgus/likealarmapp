@@ -1,5 +1,6 @@
 package com.example.q.likealarmapplication.IdealActivity;
 
+import android.app.ActionBar;
 import android.content.Context;
 import android.content.Intent;
 import android.support.v7.app.AppCompatActivity;
@@ -23,7 +24,6 @@ public class IdealCreateActivity extends AppCompatActivity {
     Context mContext;
     Boolean is_first = false;
     MultiViewTypeAdapter2 mAdapter;
-
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {

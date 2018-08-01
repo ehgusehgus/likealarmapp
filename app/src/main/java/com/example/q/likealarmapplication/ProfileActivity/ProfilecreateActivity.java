@@ -1,7 +1,9 @@
 package com.example.q.likealarmapplication.ProfileActivity;
 
+import android.app.ActionBar;
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.drawable.ColorDrawable;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.DefaultItemAnimator;
@@ -32,6 +34,9 @@ public class ProfilecreateActivity extends AppCompatActivity {
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         getSupportActionBar().setHomeButtonEnabled(true);
         getSupportActionBar().setTitle("프로필작성");
+
+
+
 
         Intent i = getIntent();
         Bundle extras = i.getExtras();
