@@ -93,7 +93,6 @@ public class LocationSer extends Service {
 
         mSocket.connect();
         //mSocket.emit("new location", "dddd");
-
     }
 
     private final LocationListener mLocationListener = new LocationListener() {
