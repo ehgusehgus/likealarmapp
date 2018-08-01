@@ -51,7 +51,7 @@
         <activity android:name=".ThirdPageActivity.Profile" />
         <activity android:name=".ChatActivity.ChatActivity" />
         <activity android:name=".ProfileActivity.ProfilecreateActivity"
-                android:theme="@style/Theme.AppCompat">
+                android:theme="@style/Theme.AppCompat.Light.DarkActionBar">
             <!-- Customize your theme here. -->></activity>
     </application>
 

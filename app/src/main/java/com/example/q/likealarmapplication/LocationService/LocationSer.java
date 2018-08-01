@@ -53,7 +53,9 @@ public class LocationSer extends Service {
     AccessToken accessToken;
     Retrofit retrofit;
     HttpInterface httpInterface;
-    ArrayList<String> NearUser= new ArrayList<String>();
+    ArrayList<String> NearUser_love= new ArrayList<String>();
+    ArrayList<String> NearUser_boring= new ArrayList<String>();
+    ArrayList<String> NearUser_need= new ArrayList<String>();
     private Location mLocation = new Location("a");
 
     public static final String LOCATION_SERVER_URL = "http://52.231.70.150:8080";
@@ -196,10 +198,10 @@ public class LocationSer extends Service {
                         10, // 통지사이의 최소 시간간격 (miliSecond)
                         1, // 통지사이의 최소 변경거리 (m)
                         mLocationListener);
-                lm.requestLocationUpdates(LocationManager.NETWORK_PROVIDER, // 등록할 위치제공자
-                        10, // 통지사이의 최소 시간간격 (miliSecond)
-                        1, // 통지사이의 최소 변경거리 (m)
-                        mLocationListener);
+//                lm.requestLocationUpdates(LocationManager.NETWORK_PROVIDER, // 등록할 위치제공자
+//                        10, // 통지사이의 최소 시간간격 (miliSecond)
+//                        1, // 통지사이의 최소 변경거리 (m)
+//                        mLocationListener);
             } catch (SecurityException ex) {
 
             }
@@ -256,10 +258,6 @@ public class LocationSer extends Service {
             Log.d("?????",mLocation.distanceTo(getLoc)+"");
             if(mLocation.distanceTo(getLoc)<=50){
 
-                if(!NearUser.contains(facebook_id))
-                    NearUser.add(facebook_id);
-
-
                 NotificationManager mNotificationManager =
                         getSystemService(NotificationManager.class);
 
@@ -282,6 +280,10 @@ public class LocationSer extends Service {
                     public void onResponse(retrofit2.Call<JsonObject> call, Response<JsonObject> response) {
                         JsonObject object = response.body().get("result").getAsJsonObject();
                         if(MyApplication.is_love && object.get("is_love").getAsInt() == 1 && !MyApplication.is_loving){
+
+                            if(!NearUser_love.contains(facebook2))
+                                NearUser_love.add(facebook2);
+
                             Intent intent = new Intent(LocationSer.this, MainActivity.class);
                             intent.putExtra("from_notification", true);
                             intent.putExtra("is_loving", true);
@@ -307,6 +309,9 @@ public class LocationSer extends Service {
                             //토스트 띄우기
                         }
                         if(MyApplication.is_boring && (object.get("is_boring").getAsInt() == 1 && !MyApplication.is_boringing)){
+
+                            if(!NearUser_boring.contains(facebook2))
+                                NearUser_boring.add(facebook2);
 
                             Intent intent = new Intent(LocationSer.this, MainActivity.class);
                             intent.putExtra("from_notification", true);
@@ -335,6 +340,9 @@ public class LocationSer extends Service {
                             //토스트 띄우기
                         }
                         if(MyApplication.is_needs && (object.get("is_need").getAsInt() == 1 && !MyApplication.is_needing)){
+
+                            if(!NearUser_need.contains(facebook2))
+                                NearUser_need.add(facebook2);
 
                             Intent intent = new Intent(LocationSer.this, MainActivity.class);
                             intent.putExtra("from_notification", true);
@@ -371,18 +379,30 @@ public class LocationSer extends Service {
                 });
             }
             else{
-                if(NearUser.contains(facebook_id)){
-                    NearUser.remove(facebook_id);
+                if(NearUser_love.contains(facebook_id)){
+                    Log.d("####", facebook_id);
+                    NearUser_love.remove(facebook_id);
+                }
+                if(NearUser_boring.contains(facebook_id)){
+                    NearUser_boring.remove(facebook_id);
+                }
+                if(NearUser_need.contains(facebook_id)){
+                    NearUser_need.remove(facebook_id);
                 }
                 NotificationManager mNotificationManager =
                         getSystemService(NotificationManager.class);
-                if(NearUser.size() == 0) {
+                if(NearUser_love.size() == 0) {
                     mNotificationManager.cancel(777);
-                    mNotificationManager.cancel(778);
-                    mNotificationManager.cancel(779);
                 }
+                if(NearUser_boring.size() == 0)
+                    mNotificationManager.cancel(778);
+                if(NearUser_need.size() == 0)
+                    mNotificationManager.cancel(779);
+                
             }
         }
     };
+
+
 }
 

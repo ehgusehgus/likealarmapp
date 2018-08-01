@@ -30,11 +30,13 @@ public class ProfilecreateActivity extends AppCompatActivity {
 
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         getSupportActionBar().setHomeButtonEnabled(true);
-        getSupportActionBar().setTitle("");
+        getSupportActionBar().setTitle("프로필작성");
 
-//        Intent i = getIntent();
-//        Bundle extras = i.getExtras();
-//        String keyword_got = extras.getString("keyword");
+
+
+        Intent i = getIntent();
+        Bundle extras = i.getExtras();
+        String name_got = extras.getString("username");
 //        String ingredient_got = extras.getString("ingredient");
 //        String category_got = extras.getString("category");
 //        String category_got2 = extras.getString("category2");
@@ -44,7 +46,7 @@ public class ProfilecreateActivity extends AppCompatActivity {
 //        ArrayList<String> recipes_got = extras.getStringArrayList("recipes");
 
         ArrayList<Model> list = new ArrayList();
-        list.add(new Model(Model.EDIT_NAME_TYPE, "이름", "", null, null));
+        list.add(new Model(Model.EDIT_NAME_TYPE, "이름", name_got, null, null));
         list.add(new Model(Model.EDIT_SEX_TYPE, "성별", "", null, null));
         list.add(new Model(Model.EDIT_AGE_TYPE, "나이", "", null, null));
         list.add(new Model(Model.EDIT_HEIGHT_TYPE, "키", "", null, null));
@@ -85,11 +87,10 @@ public class ProfilecreateActivity extends AppCompatActivity {
                 return true;
             case R.id.done:
                 RecyclerView recyclerView = findViewById(R.id.recyclerView);
-                //((MultiViewTypeAdapter)recyclerView.getAdapter()).finishClick();
+                ((MultiViewTypeAdapter)recyclerView.getAdapter()).finishClick();
                 return true;
             default:
                 return super.onOptionsItemSelected(item);
         }
     }
-
 }
